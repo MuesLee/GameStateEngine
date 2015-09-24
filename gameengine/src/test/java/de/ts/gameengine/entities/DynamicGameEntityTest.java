@@ -8,7 +8,7 @@ import org.junit.Test;
 public class DynamicGameEntityTest {
 
 	private DynamicGameEntity classUnderTest;
-	private MoveActions moveActions;
+	private ControlAction moveActions;
 	
 	protected Animation animation;
 	protected int currentAction;
@@ -18,8 +18,10 @@ public class DynamicGameEntityTest {
 	public void init() throws Exception {
 		this.classUnderTest = new Enemy();
 		
-		classUnderTest.setMoveSpeedMax(15);
-		classUnderTest.setMoveSpeedIncreaseRate(5);
+		classUnderTest.setMoveSpeedXMax(15);
+		classUnderTest.setMoveSpeedYMax(15);
+		classUnderTest.setMoveSpeedXIncreaseRate(5);
+		classUnderTest.setMoveSpeedYIncreaseRate(5);
 		classUnderTest.setMoveSpeedSlowDownRate(5);
 		classUnderTest.setJumpSpeedMax(10);
 		classUnderTest.setJumpSpeedTakeOffSpeed(10);
@@ -28,7 +30,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.setFallSpeedIncreaseRate(5);
 		classUnderTest.setFallSpeedMax(10);
 		
-		moveActions = new MoveActions();
+		moveActions = new ControlAction();
 		classUnderTest.setMoveActions(moveActions);
 	}
 	
@@ -36,7 +38,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityMoves1StepRight() throws Exception {
 		
-		moveActions.setMovingRight(true);
+		moveActions.setRight(true);
 
 		classUnderTest.update();
 
@@ -48,7 +50,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityMoves1Stepleft() throws Exception {
 		
-		moveActions.setMovingLeft(true);
+		moveActions.setLeft(true);
 		
 		classUnderTest.update();
 		
@@ -61,7 +63,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityMoves2StepRight() throws Exception {
 		
-		moveActions.setMovingRight(true);
+		moveActions.setRight(true);
 
 		classUnderTest.update();
 		classUnderTest.update();
@@ -74,7 +76,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityMoves2StepLeft() throws Exception {
 		
-		moveActions.setMovingLeft(true);
+		moveActions.setLeft(true);
 		
 		classUnderTest.update();
 		classUnderTest.update();
@@ -87,12 +89,12 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityMoves2StepRightThen1StepNoMove() throws Exception {
 		
-		moveActions.setMovingRight(true);
+		moveActions.setRight(true);
 
 		classUnderTest.update();
 		classUnderTest.update();
 		
-		moveActions.setMovingRight(false);
+		moveActions.setRight(false);
 		
 		classUnderTest.update();
 
@@ -105,12 +107,12 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityMoves2StepLeftThen1StepNoMove() throws Exception {
 		
-		moveActions.setMovingLeft(true);
+		moveActions.setLeft(true);
 		
 		classUnderTest.update();
 		classUnderTest.update();
 		
-		moveActions.setMovingLeft(false);
+		moveActions.setLeft(false);
 		
 		classUnderTest.update();
 		
@@ -122,7 +124,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityJumps1Step() throws Exception {
 		
-		moveActions.setJumping(true);
+		moveActions.setUp(true);
 		classUnderTest.setStandsOnSolidGround(true);
 		
 		classUnderTest.update();
@@ -135,7 +137,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityJumps2Step() throws Exception {
 		
-		moveActions.setJumping(true);
+		moveActions.setUp(true);
 		classUnderTest.setStandsOnSolidGround(true);
 		
 		classUnderTest.update();
@@ -148,11 +150,11 @@ public class DynamicGameEntityTest {
 		assertEquals(expected, actual);
 	}
 	@Test
-	public void testEntityJumps1StepWhileMovingRight() throws Exception {
+	public void testEntityJumps1StepWhileRight() throws Exception {
 		
-		moveActions.setJumping(true);
+		moveActions.setUp(true);
 		classUnderTest.setStandsOnSolidGround(true);
-		moveActions.setMovingRight(true);
+		moveActions.setRight(true);
 		
 		classUnderTest.update();
 		
@@ -167,7 +169,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityFalls1Step() throws Exception {
 		
-		moveActions.setJumping(false);
+		moveActions.setUp(false);
 		classUnderTest.setStandsOnSolidGround(false);
 		classUnderTest.setY(20);
 		

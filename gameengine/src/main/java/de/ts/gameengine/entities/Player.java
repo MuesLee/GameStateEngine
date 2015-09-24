@@ -22,8 +22,10 @@ public class Player extends DynamicGameEntity {
 	public Player(GameController gameController, int playerID) {
 		super();
 		this.setPlayerID(playerID);
-		setMoveSpeedIncreaseRate(5);
-		setMoveSpeedMax(15);
+		setMoveSpeedXIncreaseRate(5);
+		setMoveSpeedYIncreaseRate(5);
+		setMoveSpeedXMax(15);
+		setMoveSpeedYMax(15);
 		setJumpSpeedIncrease(2);
 		setJumpSpeedMax(7);
 		setMoveSpeedSlowDownRate(7.5);

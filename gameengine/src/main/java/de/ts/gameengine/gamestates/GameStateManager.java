@@ -20,8 +20,8 @@ public class GameStateManager {
 		currentGameState.setPlayers(gameController.getPlayers());
 		currentGameState.init();
 		
-		System.out.println(currentGameState);
 		System.out.println("########## MANAGER INIT GAME STATE #############");
+		System.out.println(currentGameState);
 	}
 
 	public void draw(Graphics2D g) {
@@ -44,9 +44,7 @@ public class GameStateManager {
 	public void loadState(int number) {
 		gameController.pauseGameloop();
 		
-		GameState stateByNumber = GameState.getStateByNumber(number);
-		final AbstractGameState nextState = gameStateFactory.createGameState(
-				stateByNumber);
+		final AbstractGameState nextState = gameStateFactory.createGameState(number);
 				currentState = nextState;
 				currentState.setManager(this);
 				init();

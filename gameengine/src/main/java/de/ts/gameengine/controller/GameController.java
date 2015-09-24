@@ -1,6 +1,7 @@
 package de.ts.gameengine.controller;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -10,6 +11,7 @@ import de.ts.gameengine.gamestates.GameStateManager;
 import de.ts.gameengine.gamestates.GameStateManagerFactory;
 import de.ts.gameengine.view.GameFrame;
 import de.ts.gameengine.view.GamePanel;
+import de.ts.gameengine.view.utils.ViewUtils;
 
 public class GameController implements Runnable {
 
@@ -45,6 +47,9 @@ public class GameController implements Runnable {
 
 		GameController.GAME_TITLE = gameName;
 		
+		Dimension screenSize = ViewUtils.getScreenSize();
+		setWIDTH(screenSize.width/2);
+		setHEIGHT(screenSize.height/2);
 		setFrame(new GameFrame(GAME_TITLE));
 		setPlayers(new ArrayList<Player>());
 		panel = new GamePanel();
@@ -69,10 +74,9 @@ public class GameController implements Runnable {
 		
 	}
 
-	public void startGameloop() {
+	private void startGameloop() {
 		running.set(true);
 		paused.set(false);
-		run();
 	}
 	
 	public void pauseGameloop ()
@@ -90,6 +94,8 @@ public class GameController implements Runnable {
 
 	public void run() {
 
+		startGameloop();
+		
 		long initialTime = System.nanoTime();
 		final double timeU = 1000000000 / UPS;
 		final double timeF = 1000000000 / FPS;
@@ -149,7 +155,6 @@ public class GameController implements Runnable {
 		gameStateManager.setGameController(this);
 		gameStateManager.loadState(0);
 		panel.setGameStateManager(gameStateManager);
-		gameStateManager.init();
 		getFrame().setVisible(true);
 	}
 
@@ -167,6 +172,7 @@ public class GameController implements Runnable {
 
 	public void setFrame(GameFrame frame) {
 		this.frame = frame;
+		this.frame.setLocationRelativeTo(null);
 	}
 
 	public ArrayList<Player> getPlayers() {

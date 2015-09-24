@@ -11,7 +11,7 @@ import de.ts.gameengine.entities.Player;
 import de.ts.gameengine.view.Camera;
 import de.ts.gameengine.view.TileMap;
 
-public class AbstractGameLevelState extends AbstractGameState {
+public class AbstractGameLevel extends AbstractGameState {
 
 	protected TileMap tileMap;
 	protected CollisionManager collisionManager;
@@ -20,7 +20,7 @@ public class AbstractGameLevelState extends AbstractGameState {
 
 	protected ArrayList<Enemy> enemies;
 
-	public AbstractGameLevelState() {
+	public AbstractGameLevel() {
 		super();
 		this.collisionManager = new CollisionManager(this);
 		this.enemies = new ArrayList<Enemy>();

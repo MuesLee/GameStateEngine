@@ -2,7 +2,7 @@ package de.ts.gameengine.view;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
@@ -22,8 +22,8 @@ public class Background {
 	public Background(String path, double moveScale) {
 		try {
 			image = ImageIO.read(ClassLoader.getSystemResourceAsStream(path));
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			image = new BufferedImage(GameController.WIDTH,GameController.HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
 		}
 
 		this.moveScale = moveScale;

@@ -7,23 +7,39 @@ import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
-import de.ts.gameengine.entities.MoveActions;
+import de.ts.gameengine.entities.ControlAction;
 
 public class KeyBindings {
 
-	private MoveActions playerOneInput = new MoveActions();
-	private MoveActions playerTwoInput = new MoveActions();
+	private ControlAction playerOneInput = new ControlAction();
+	private ControlAction playerTwoInput = new ControlAction();
 
 	@SuppressWarnings("serial")
 	public KeyBindings(JComponent gp) {
 		// PLAYER TWO
 
 		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "Enter pressed");
+		gp.getActionMap().put("Enter pressed", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				getPlayerOneInput().setStart(true);
+			}
+		});
+		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "Enter released");
+		gp.getActionMap().put("Enter released", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				getPlayerOneInput().setStart(false);
+			}
+		});
+		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "W pressed");
 		gp.getActionMap().put("W pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setJumping(true);
+				getPlayerTwoInput().setUp(true);
 			}
 		});
 
@@ -32,7 +48,7 @@ public class KeyBindings {
 		gp.getActionMap().put("W released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setJumping(false);
+				getPlayerTwoInput().setUp(false);
 			}
 		});
 
@@ -41,7 +57,7 @@ public class KeyBindings {
 		gp.getActionMap().put("S pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setCrouching(true);
+				getPlayerTwoInput().setDown(true);
 			}
 		});
 		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -49,7 +65,7 @@ public class KeyBindings {
 		gp.getActionMap().put("S released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setCrouching(false);
+				getPlayerTwoInput().setDown(false);
 			}
 		});
 
@@ -58,7 +74,7 @@ public class KeyBindings {
 		gp.getActionMap().put("A pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setMovingLeft(true);
+				getPlayerTwoInput().setLeft(true);;
 			}
 		});
 		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -66,7 +82,7 @@ public class KeyBindings {
 		gp.getActionMap().put("A released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setMovingLeft(false);
+				getPlayerTwoInput().setLeft(false);
 			}
 		});
 
@@ -75,7 +91,7 @@ public class KeyBindings {
 		gp.getActionMap().put("D pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setMovingRight(true);
+				getPlayerTwoInput().setRight(true);
 			}
 		});
 		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -83,7 +99,7 @@ public class KeyBindings {
 		gp.getActionMap().put("D released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerTwoInput().setMovingRight(false);
+				getPlayerTwoInput().setRight(false);
 			}
 		});
 
@@ -95,7 +111,7 @@ public class KeyBindings {
 		gp.getActionMap().put("down pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setCrouching(true);
+				getPlayerOneInput().setDown(true);
 			}
 		});
 
@@ -105,7 +121,7 @@ public class KeyBindings {
 		gp.getActionMap().put("down released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setCrouching(false);
+				getPlayerOneInput().setDown(false);
 			}
 		});
 
@@ -114,7 +130,7 @@ public class KeyBindings {
 		gp.getActionMap().put("up pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setJumping(true);
+				getPlayerOneInput().setUp(true);
 			}
 		});
 
@@ -123,7 +139,7 @@ public class KeyBindings {
 		gp.getActionMap().put("up released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setJumping(false);
+				getPlayerOneInput().setUp(false);
 			}
 		});
 
@@ -133,7 +149,7 @@ public class KeyBindings {
 		gp.getActionMap().put("left pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setMovingLeft(true);
+				getPlayerOneInput().setLeft(true);;
 			}
 		});
 		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -142,7 +158,7 @@ public class KeyBindings {
 		gp.getActionMap().put("left released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setMovingLeft(false);
+				getPlayerOneInput().setLeft(false);
 			}
 		});
 
@@ -152,7 +168,7 @@ public class KeyBindings {
 		gp.getActionMap().put("right pressed", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setMovingRight(true);
+				getPlayerOneInput().setRight(true);
 			}
 		});
 		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -161,24 +177,24 @@ public class KeyBindings {
 		gp.getActionMap().put("right released", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				getPlayerOneInput().setMovingRight(false);
+				getPlayerOneInput().setRight((false));
 			}
 		});
 	}
 
-	public MoveActions getPlayerOneInput() {
+	public ControlAction getPlayerOneInput() {
 		return playerOneInput;
 	}
 
-	public void setPlayerOneInput(MoveActions playerOneInput) {
+	public void setPlayerOneInput(ControlAction playerOneInput) {
 		this.playerOneInput = playerOneInput;
 	}
 
-	public MoveActions getPlayerTwoInput() {
+	public ControlAction getPlayerTwoInput() {
 		return playerTwoInput;
 	}
 
-	public void setPlayerTwoInput(MoveActions playerTwoInput) {
+	public void setPlayerTwoInput(ControlAction playerTwoInput) {
 		this.playerTwoInput = playerTwoInput;
 	}
 }

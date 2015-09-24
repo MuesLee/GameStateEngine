@@ -11,12 +11,16 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	protected boolean standsOnSolidGround;
 	protected boolean isJumping;
 
-	private MoveActions moveActions;
+	private ControlAction moveActions;
 
-	protected double moveSpeed;
-	protected double moveSpeedMax;
+	protected double moveSpeedX;
+	protected double moveSpeedXMax;
+	protected double moveSpeedY;
+	protected double moveSpeedYMax;
 	protected double moveSpeedSlowDownRate;
-	protected double moveSpeedIncreaseRate;
+	protected double moveSpeedXIncreaseRate;
+	protected double moveSpeedYIncreaseRate;
+	
 	protected double jumpSpeed;
 	protected double jumpSpeedTakeOffSpeed;
 	protected double jumpSpeedIncreaseRate;
@@ -33,7 +37,7 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	public DynamicGameEntity() {
 		super();
 
-		this.setMoveActions(new MoveActions());
+		this.setMoveActions(new ControlAction());
 		setAnimation(new Animation());
 
 	}
@@ -42,6 +46,7 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	public void update() {
 
 		move();
+		moveActions.reset();
 		getAnimation().update();
 	}
 
@@ -53,19 +58,21 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	private void move() {
 
 		// X Axis
-		if (getMoveActions().isMovingRight()) {
-			moveSpeed = Math.min(moveSpeedMax, moveSpeed
-					+ moveSpeedIncreaseRate);
-			x += moveSpeed;
-		} else if (getMoveActions().isMovingLeft()) {
-			moveSpeed = Math.min(moveSpeedMax, moveSpeed
-					+ moveSpeedIncreaseRate);
-			x -= moveSpeed;
+		if (getMoveActions().isRight()) {
+			moveSpeedX = Math.min(moveSpeedXMax, moveSpeedX
+					+ moveSpeedXIncreaseRate);
+			x += moveSpeedX;
+		} else if (getMoveActions().isLeft()) {
+			moveSpeedX = Math.min(moveSpeedXMax, moveSpeedX
+					+ moveSpeedXIncreaseRate);
+			x -= moveSpeedX;
 		} else {
-			moveSpeed = 0;
+			
+			//TODO SLOW DOWN RATE MOVESPEED
+			moveSpeedX = 0;
 		}
 		// Y Axis
-		if (getMoveActions().isJumping()) {
+		if (getMoveActions().isJump()) {
 			if (standsOnSolidGround) {
 				jumpSpeed = Math.min(getJumpSpeedMax(), jumpSpeed
 						+ jumpSpeedTakeOffSpeed);
@@ -116,22 +123,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.isFacingRight = isFacingRight;
 	}
 
-	public double getMoveSpeed() {
-		return moveSpeed;
-	}
-
-	public void setMoveSpeed(double moveSpeed) {
-		this.moveSpeed = moveSpeed;
-	}
-
-	public double getMoveSpeedMax() {
-		return moveSpeedMax;
-	}
-
-	public void setMoveSpeedMax(double moveSpeedMax) {
-		this.moveSpeedMax = moveSpeedMax;
-	}
-
 	public double getMoveSpeedSlowDownRate() {
 		return moveSpeedSlowDownRate;
 	}
@@ -156,14 +147,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.jumpSpeed = jumpSpeed;
 	}
 
-	public double getMoveSpeedIncreaseRate() {
-		return moveSpeedIncreaseRate;
-	}
-
-	public void setMoveSpeedIncreaseRate(double moveSpeedIncreaseRate) {
-		this.moveSpeedIncreaseRate = moveSpeedIncreaseRate;
-	}
-
 	public double getJumpSpeedIncrease() {
 		return jumpSpeedIncreaseRate;
 	}
@@ -172,11 +155,11 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.jumpSpeedIncreaseRate = jumpSpeedIncrease;
 	}
 
-	public MoveActions getMoveActions() {
+	public ControlAction getMoveActions() {
 		return moveActions;
 	}
 
-	public void setMoveActions(MoveActions moveActions) {
+	public void setMoveActions(ControlAction moveActions) {
 		this.moveActions = moveActions;
 	}
 
@@ -250,5 +233,61 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 	public void setFallSpeed(double fallSpeed) {
 		this.fallSpeed = fallSpeed;
+	}
+
+	public double getMoveSpeedX() {
+		return moveSpeedX;
+	}
+
+	public void setMoveSpeedX(double moveSpeedX) {
+		this.moveSpeedX = moveSpeedX;
+	}
+
+	public double getMoveSpeedXMax() {
+		return moveSpeedXMax;
+	}
+
+	public void setMoveSpeedXMax(double moveSpeedXMax) {
+		this.moveSpeedXMax = moveSpeedXMax;
+	}
+
+	public double getMoveSpeedY() {
+		return moveSpeedY;
+	}
+
+	public void setMoveSpeedY(double moveSpeedY) {
+		this.moveSpeedY = moveSpeedY;
+	}
+
+	public double getMoveSpeedYMax() {
+		return moveSpeedYMax;
+	}
+
+	public void setMoveSpeedYMax(double moveSpeedYMax) {
+		this.moveSpeedYMax = moveSpeedYMax;
+	}
+
+	public double getJumpSpeedIncreaseRate() {
+		return jumpSpeedIncreaseRate;
+	}
+
+	public void setJumpSpeedIncreaseRate(double jumpSpeedIncreaseRate) {
+		this.jumpSpeedIncreaseRate = jumpSpeedIncreaseRate;
+	}
+
+	public double getMoveSpeedXIncreaseRate() {
+		return moveSpeedXIncreaseRate;
+	}
+
+	public void setMoveSpeedXIncreaseRate(double moveSpeedXIncreaseRate) {
+		this.moveSpeedXIncreaseRate = moveSpeedXIncreaseRate;
+	}
+
+	public double getMoveSpeedYIncreaseRate() {
+		return moveSpeedYIncreaseRate;
+	}
+
+	public void setMoveSpeedYIncreaseRate(double moveSpeedYIncreaseRate) {
+		this.moveSpeedYIncreaseRate = moveSpeedYIncreaseRate;
 	}
 }

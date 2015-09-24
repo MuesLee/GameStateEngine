@@ -1,14 +1,18 @@
 package de.ts.gameengine.gamestates;
 
-public enum GameState {
+import de.ts.gameengine.gamestates.menu.DefaultMenuState;
 
-	MENU_STATE(0), LEVEL_1(1);
+public enum GameState implements GameStateOrder{
+
+	MENU_STATE(0, DefaultMenuState.class);
 
 	private int stateNumber;
+	private Class<?> gameStateClass;
 
-	private GameState(int stateNumber)
+	private GameState(int stateNumber, Class<?> gameStateClass)
 	{
 		this.setStateNumber(stateNumber);
+		this.gameStateClass = gameStateClass;
 	}
 
 	public int getStateNumber()
@@ -21,23 +25,9 @@ public enum GameState {
 		this.stateNumber = stateNumber;
 	}
 
-	public static GameState getStateByNumber(int number)
-	{
-		GameState result = null;
-
-		GameState[] values = GameState.values();
-		for (int i = 0; i < values.length; i++)
-		{
-			GameState t = values[i];
-
-			if (number == t.getStateNumber())
-			{
-				result = t;
-				break;
-			}
-		}
-
-		return result;
+	@Override
+	public Class<?> getGameStateClass() {
+		return gameStateClass;
 	}
 
 }

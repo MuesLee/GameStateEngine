@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.ts.gameengine.entities.DynamicGameEntity;
 import de.ts.gameengine.entities.StaticGameEntity;
-import de.ts.gameengine.gamestates.AbstractGameLevelState;
+import de.ts.gameengine.gamestates.AbstractGameLevel;
 import de.ts.gameengine.view.Camera;
 
 public class CollisionManager {
@@ -15,9 +15,9 @@ public class CollisionManager {
 
 	private Quadtree staticQuadtree;
 	
-	private AbstractGameLevelState gameState;
+	private AbstractGameLevel gameState;
 
-	public CollisionManager(AbstractGameLevelState gameState) {
+	public CollisionManager(AbstractGameLevel gameState) {
 
 		this.gameState = gameState;
 	}
