@@ -50,7 +50,6 @@ public class DynamicGameEntityTest {
 	public void testEntityMoves1StepRight() throws Exception {
 		
 		moveActions.setRight(true);
-
 		classUnderTest.update();
 
 		int expected = MOVE_SPEED_X_INCREASE_RATE;
@@ -62,7 +61,6 @@ public class DynamicGameEntityTest {
 	public void testEntityMoves1Stepleft() throws Exception {
 		
 		moveActions.setLeft(true);
-		
 		classUnderTest.update();
 		
 		int expected = -MOVE_SPEED_X_INCREASE_RATE;
@@ -75,8 +73,8 @@ public class DynamicGameEntityTest {
 	public void testEntityMoves2StepRight() throws Exception {
 		
 		moveActions.setRight(true);
-
 		classUnderTest.update();
+		moveActions.setRight(true);
 		classUnderTest.update();
 
 		int expected = MOVE_SPEED_X_INCREASE_RATE + 2 * MOVE_SPEED_X_INCREASE_RATE;
@@ -88,8 +86,8 @@ public class DynamicGameEntityTest {
 	public void testEntityMoves2StepLeft() throws Exception {
 		
 		moveActions.setLeft(true);
-		
 		classUnderTest.update();
+		moveActions.setLeft(true);
 		classUnderTest.update();
 		
 		int expected = -(MOVE_SPEED_X_INCREASE_RATE + 2 * MOVE_SPEED_X_INCREASE_RATE);
@@ -101,11 +99,9 @@ public class DynamicGameEntityTest {
 	public void testEntityMoves2StepRightThen1StepNoMove() throws Exception {
 		
 		moveActions.setRight(true);
-
 		classUnderTest.update();
+		moveActions.setRight(true);
 		classUnderTest.update();
-		
-		moveActions.setRight(false);
 		
 		classUnderTest.update();
 
@@ -122,8 +118,8 @@ public class DynamicGameEntityTest {
 	public void testEntityMoves2StepLeftThen1StepNoMove() throws Exception {
 		
 		moveActions.setLeft(true);
-		
 		classUnderTest.update();
+		moveActions.setLeft(true);
 		classUnderTest.update();
 		
 		moveActions.setLeft(false);
@@ -154,10 +150,10 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityJumps2Step() throws Exception {
 		
-		moveActions.setUp(true);
 		classUnderTest.setStandsOnSolidGround(true);
-		
+		moveActions.setJump(true);
 		classUnderTest.update();
+		moveActions.setJump(true);
 		classUnderTest.setStandsOnSolidGround(false);
 		classUnderTest.update();
 		
