@@ -23,8 +23,6 @@ public class GameController implements Runnable {
 
 	private static final boolean RENDER_TIME = true;
 
-	private static GameController gameController;
-
 	private GameStateManagerFactory gameStateManagerFactory;
 	private GameStateManager gameStateManager;
 	
@@ -32,22 +30,23 @@ public class GameController implements Runnable {
 
 	private GameFrame frame;
 
-	private KeyBindings keyBindings;
+	protected KeyBindings keyBindings;
 
 	private ArrayList<Player> players;
 
 	private AtomicBoolean running = new AtomicBoolean(false);
 	private AtomicBoolean paused = new AtomicBoolean(false);
 
-	private GamePanel panel;
+	protected GamePanel panel;
 	
 	private static long nextEntityID = 0l;
 
-	private GameController(String gameName) {
+	public GameController(String gameName) {
 
 		GameController.GAME_TITLE = gameName;
 		
 		setFrame(new GameFrame(GAME_TITLE));
+		setPlayers(new ArrayList<Player>());
 		panel = new GamePanel();
 		getFrame().setLayout(new BorderLayout());
 		getFrame().add(panel, BorderLayout.CENTER);
@@ -58,6 +57,7 @@ public class GameController implements Runnable {
 	
 	protected void configurePlayers()
 	{
+		
 		Player playerOne = new Player(this, 1);
 		playerOne.setName("Player One");
 		Player playerTwo = new Player(this, 2);
@@ -138,15 +138,6 @@ public class GameController implements Runnable {
 	public static long getNextIDForEntity ()
 	{
 		return nextEntityID++;
-	}
-	
-	public static GameController getInstance()
-	{
-		if(gameController == null)
-		{
-			gameController = new GameController(GAME_TITLE);
-		}
-		return gameController;
 	}
 	
 	private void render() {

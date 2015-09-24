@@ -7,17 +7,17 @@ import de.ts.gameengine.controller.GameController;
 
 public class Player extends DynamicGameEntity {
 
-	private List<BufferedImage[]> sprites;
-	private static int[] NUMFRAMES = { 3, 3 };
-	private static int[] FRAMEWIDTHS = { 64, 64, 64 };
-	private static int[] FRAMEHEIGHTS = { 75, 75, 75 };
-	private static int[] SPRITETIMINGS = { 3, 3 };
+	protected List<BufferedImage[]> sprites;
+	protected static int[] NUMFRAMES = { 3, 3 };
+	protected static int[] FRAMEWIDTHS = { 64, 64, 64 };
+	protected static int[] FRAMEHEIGHTS = { 75, 75, 75 };
+	protected static int[] SPRITETIMINGS = { 3, 3 };
 
-	private static final int ANIMATION_MOVE_RIGHT = 0;
+	protected static final int ANIMATION_MOVE_RIGHT = 0;
 //	private static final int ANIMATION_MOVE_LEFT = 1;
 
-	private GameController gameController;
-	private int playerID;
+	protected GameController gameController;
+	protected int playerID;
 
 	public Player(GameController gameController, int playerID) {
 		super();
@@ -30,9 +30,9 @@ public class Player extends DynamicGameEntity {
 		setFallSpeedIncreaseRate(1);
 		setFallSpeedMax(5);
 		this.setGameController(gameController);
+		
+		fillSprites();
 
-
-		setAnimation(ANIMATION_MOVE_RIGHT);
 
 	}
 
@@ -46,7 +46,7 @@ public class Player extends DynamicGameEntity {
 		super.update();
 	}
 	
-	private void setAnimation(int i) {
+	protected void setAnimation(int i) {
 		setCurrentAction(i);
 		animation.setFrames(sprites.get(getCurrentAction()));
 		animation.setFramesBetweenNextAnimation(SPRITETIMINGS[getCurrentAction()]);
