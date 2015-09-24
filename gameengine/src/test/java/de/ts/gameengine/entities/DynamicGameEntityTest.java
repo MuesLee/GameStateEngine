@@ -7,6 +7,17 @@ import org.junit.Test;
 
 public class DynamicGameEntityTest {
 
+	private static final int FALL_SPEED_MAX = 10;
+	private static final int FALL_SPEED_INCREASE_RATE = 5;
+	private static final Animation ANIMATION2 = new Animation();
+	private static final int JUMP_SPEED_INCREASE = 5;
+	private static final int JUMP_SPEED_TAKE_OFF_SPEED = 10;
+	public static final int JUMP_SPEED_MAX = 10;
+	private static final int MOVE_SPEED_SLOW_DOWN_RATE = 5;
+	private static final int MOVE_SPEED_Y_INCREASE_RATE = 5;
+	private static final int MOVE_SPEED_X_INCREASE_RATE = 5;
+	private static final int MOVE_SPEED_Y_MAX = 15;
+	private static final int MOVESPEED_X_MAX = 15;
 	private DynamicGameEntity classUnderTest;
 	private ControlAction moveActions;
 	
@@ -18,17 +29,17 @@ public class DynamicGameEntityTest {
 	public void init() throws Exception {
 		this.classUnderTest = new Enemy();
 		
-		classUnderTest.setMoveSpeedXMax(15);
-		classUnderTest.setMoveSpeedYMax(15);
-		classUnderTest.setMoveSpeedXIncreaseRate(5);
-		classUnderTest.setMoveSpeedYIncreaseRate(5);
-		classUnderTest.setMoveSpeedSlowDownRate(5);
-		classUnderTest.setJumpSpeedMax(10);
-		classUnderTest.setJumpSpeedTakeOffSpeed(10);
-		classUnderTest.setJumpSpeedIncrease(5);
-		classUnderTest.setAnimation(new Animation());
-		classUnderTest.setFallSpeedIncreaseRate(5);
-		classUnderTest.setFallSpeedMax(10);
+		classUnderTest.setMoveSpeedXMax(MOVESPEED_X_MAX);
+		classUnderTest.setMoveSpeedYMax(MOVE_SPEED_Y_MAX);
+		classUnderTest.setMoveSpeedXIncreaseRate(MOVE_SPEED_X_INCREASE_RATE);
+		classUnderTest.setMoveSpeedYIncreaseRate(MOVE_SPEED_Y_INCREASE_RATE);
+		classUnderTest.setMoveSpeedSlowDownRate(MOVE_SPEED_SLOW_DOWN_RATE);
+		classUnderTest.setJumpSpeedMax(JUMP_SPEED_MAX);
+		classUnderTest.setJumpSpeedTakeOffSpeed(JUMP_SPEED_TAKE_OFF_SPEED);
+		classUnderTest.setJumpSpeedIncrease(JUMP_SPEED_INCREASE);
+		classUnderTest.setAnimation(ANIMATION2);
+		classUnderTest.setFallSpeedIncreaseRate(FALL_SPEED_INCREASE_RATE);
+		classUnderTest.setFallSpeedMax(FALL_SPEED_MAX);
 		
 		moveActions = new ControlAction();
 		classUnderTest.setMoveActions(moveActions);
@@ -42,7 +53,7 @@ public class DynamicGameEntityTest {
 
 		classUnderTest.update();
 
-		int expected = 5;
+		int expected = MOVE_SPEED_X_INCREASE_RATE;
 		int actual = classUnderTest.getX();
 
 		assertEquals(expected, actual);
@@ -54,7 +65,7 @@ public class DynamicGameEntityTest {
 		
 		classUnderTest.update();
 		
-		int expected = -5;
+		int expected = -MOVE_SPEED_X_INCREASE_RATE;
 		int actual = classUnderTest.getX();
 		
 		assertEquals(expected, actual);
@@ -68,7 +79,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.update();
 		classUnderTest.update();
 
-		int expected = 15;
+		int expected = MOVE_SPEED_X_INCREASE_RATE + 2 * MOVE_SPEED_X_INCREASE_RATE;
 		int actual = classUnderTest.getX();
 
 		assertEquals(expected, actual);
@@ -81,7 +92,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.update();
 		classUnderTest.update();
 		
-		int expected = -15;
+		int expected = -(MOVE_SPEED_X_INCREASE_RATE + 2 * MOVE_SPEED_X_INCREASE_RATE);
 		int actual = classUnderTest.getX();
 		
 		assertEquals(expected, actual);
@@ -98,7 +109,10 @@ public class DynamicGameEntityTest {
 		
 		classUnderTest.update();
 
-		int expected = 15;
+		int activeMovement = MOVE_SPEED_X_INCREASE_RATE + 2 * MOVE_SPEED_X_INCREASE_RATE;
+		int passiveMovement = activeMovement-MOVE_SPEED_SLOW_DOWN_RATE;
+		
+		int expected = activeMovement + passiveMovement;
 		int actual = classUnderTest.getX();
 
 		assertEquals(expected, actual);
@@ -116,7 +130,10 @@ public class DynamicGameEntityTest {
 		
 		classUnderTest.update();
 		
-		int expected = -15;
+		int activeMovement = -(MOVE_SPEED_X_INCREASE_RATE + 2 * MOVE_SPEED_X_INCREASE_RATE);
+		int passiveMovement = activeMovement-MOVE_SPEED_SLOW_DOWN_RATE;
+		
+		int expected = -(activeMovement + passiveMovement);
 		int actual = classUnderTest.getX();
 		
 		assertEquals(expected, actual);
@@ -124,12 +141,12 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityJumps1Step() throws Exception {
 		
-		moveActions.setUp(true);
+		moveActions.setJump(true);
 		classUnderTest.setStandsOnSolidGround(true);
 		
 		classUnderTest.update();
 		
-		int expected = -10;
+		int expected = -(JUMP_SPEED_TAKE_OFF_SPEED+JUMP_SPEED_INCREASE);
 		int actual = classUnderTest.getY();
 		
 		assertEquals(expected, actual);
@@ -144,7 +161,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.setStandsOnSolidGround(false);
 		classUnderTest.update();
 		
-		int expected = -20;
+		int expected = -(JUMP_SPEED_TAKE_OFF_SPEED+JUMP_SPEED_INCREASE+2*JUMP_SPEED_INCREASE);
 		int actual = classUnderTest.getY();
 		
 		assertEquals(expected, actual);
@@ -158,9 +175,9 @@ public class DynamicGameEntityTest {
 		
 		classUnderTest.update();
 		
-		int expectedY = -10;
+		int expectedY = -(JUMP_SPEED_TAKE_OFF_SPEED+JUMP_SPEED_INCREASE);
 		int actualY = classUnderTest.getY();
-		int expectedX = 5;
+		int expectedX = MOVE_SPEED_X_INCREASE_RATE;
 		int actualX = classUnderTest.getX();
 		
 		assertEquals(expectedY, actualY);
@@ -171,11 +188,12 @@ public class DynamicGameEntityTest {
 		
 		moveActions.setUp(false);
 		classUnderTest.setStandsOnSolidGround(false);
-		classUnderTest.setY(20);
+		int entityBaseY = 20;
+		classUnderTest.setY(entityBaseY);
 		
 		classUnderTest.update();
 		
-		int expected = 25;
+		int expected = entityBaseY-FALL_SPEED_INCREASE_RATE;
 		int actual = classUnderTest.getY();
 		
 		assertEquals(expected, actual);

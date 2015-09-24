@@ -67,11 +67,21 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 					+ moveSpeedXIncreaseRate);
 			x -= moveSpeedX;
 		} else {
-			
-			//TODO SLOW DOWN RATE MOVESPEED
-			moveSpeedX = 0;
+			moveSpeedX = Math.max(0, moveSpeedX-moveSpeedSlowDownRate);
 		}
 		// Y Axis
+		if (getMoveActions().isUp()) {
+			moveSpeedY = Math.min(moveSpeedYMax, moveSpeedY
+					+ moveSpeedYIncreaseRate);
+			y += moveSpeedY;
+		} else if (getMoveActions().isDown()) {
+			moveSpeedY = Math.min(moveSpeedYMax, moveSpeedY
+					+ moveSpeedYIncreaseRate);
+			y -= moveSpeedY;
+		} else {
+			moveSpeedY = Math.max(0, moveSpeedY-moveSpeedSlowDownRate);
+		}
+		
 		if (getMoveActions().isJump()) {
 			if (standsOnSolidGround) {
 				jumpSpeed = Math.min(getJumpSpeedMax(), jumpSpeed
