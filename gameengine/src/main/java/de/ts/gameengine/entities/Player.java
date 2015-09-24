@@ -1,21 +1,17 @@
 package de.ts.gameengine.entities;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import de.ts.gameengine.controller.GameController;
 
 public class Player extends DynamicGameEntity {
 
 	private List<BufferedImage[]> sprites;
-	private static final int[] NUMFRAMES = { 3, 3 };
-	private static final int[] FRAMEWIDTHS = { 64, 64, 64 };
-	private static final int[] FRAMEHEIGHTS = { 75, 75, 75 };
-	private static final int[] SPRITETIMINGS = { 3, 3 };
+	private static int[] NUMFRAMES = { 3, 3 };
+	private static int[] FRAMEWIDTHS = { 64, 64, 64 };
+	private static int[] FRAMEHEIGHTS = { 75, 75, 75 };
+	private static int[] SPRITETIMINGS = { 3, 3 };
 
 	private static final int ANIMATION_MOVE_RIGHT = 0;
 //	private static final int ANIMATION_MOVE_LEFT = 1;
@@ -35,29 +31,16 @@ public class Player extends DynamicGameEntity {
 		setFallSpeedMax(5);
 		this.setGameController(gameController);
 
-		BufferedImage spritesheet;
-		try {
-			spritesheet = ImageIO.read(getClass().getResourceAsStream(
-					"/Sprites/Player/nerdyguy_192_150.png"));
 
-			int count = 0;
-			sprites = new ArrayList<BufferedImage[]>();
-			for (int i = 0; i < NUMFRAMES.length; i++) {
-				BufferedImage[] bi = new BufferedImage[NUMFRAMES[i]];
-				for (int j = 0; j < NUMFRAMES[i]; j++) {
-					bi[j] = spritesheet.getSubimage(j * FRAMEWIDTHS[i], count,
-							FRAMEWIDTHS[i], FRAMEHEIGHTS[i]);
-				}
-				sprites.add(bi);
-				count += FRAMEHEIGHTS[i];
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		setAnimation(ANIMATION_MOVE_RIGHT);
 
 	}
 
+	protected void fillSprites ()
+	{
+
+	}
+	
 	@Override
 	public void update() {
 		super.update();
@@ -86,4 +69,38 @@ public class Player extends DynamicGameEntity {
 	public void setPlayerID(int playerID) {
 		this.playerID = playerID;
 	}
+
+	public static int[] getNUMFRAMES() {
+		return NUMFRAMES;
+	}
+
+	public static void setNUMFRAMES(int[] nUMFRAMES) {
+		NUMFRAMES = nUMFRAMES;
+	}
+
+	public static int[] getFRAMEWIDTHS() {
+		return FRAMEWIDTHS;
+	}
+
+	public static void setFRAMEWIDTHS(int[] fRAMEWIDTHS) {
+		FRAMEWIDTHS = fRAMEWIDTHS;
+	}
+
+	public static int[] getFRAMEHEIGHTS() {
+		return FRAMEHEIGHTS;
+	}
+
+	public static void setFRAMEHEIGHTS(int[] fRAMEHEIGHTS) {
+		FRAMEHEIGHTS = fRAMEHEIGHTS;
+	}
+
+	public static int[] getSPRITETIMINGS() {
+		return SPRITETIMINGS;
+	}
+
+	public static void setSPRITETIMINGS(int[] sPRITETIMINGS) {
+		SPRITETIMINGS = sPRITETIMINGS;
+	}
+	
+	
 }

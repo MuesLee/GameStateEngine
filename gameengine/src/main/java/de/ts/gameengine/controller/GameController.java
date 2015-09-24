@@ -13,14 +13,13 @@ import de.ts.gameengine.view.GamePanel;
 
 public class GameController implements Runnable {
 
-	public static final String GAME_TITLE = "EPIC NAME";
+	public static String GAME_TITLE = "EPIC NAME";
 
-	public static final int WIDTH = 660;
-	public static final int HEIGHT = 330;
+	public static int WIDTH = 660;
+	public static int HEIGHT = 330;
 
-	private static final int UPS = 30;
-
-	private static final int FPS = 60;
+	private static int UPS = 30;
+	private static int FPS = 60;
 
 	private static final boolean RENDER_TIME = true;
 
@@ -44,16 +43,21 @@ public class GameController implements Runnable {
 	
 	private static long nextEntityID = 0l;
 
-	private GameController() {
+	private GameController(String gameName) {
 
-		setPlayers(new ArrayList<Player>());
-
+		GameController.GAME_TITLE = gameName;
+		
 		setFrame(new GameFrame(GAME_TITLE));
 		panel = new GamePanel();
 		getFrame().setLayout(new BorderLayout());
 		getFrame().add(panel, BorderLayout.CENTER);
 		getFrame().pack();
 
+		configurePlayers();
+	}
+	
+	protected void configurePlayers()
+	{
 		Player playerOne = new Player(this, 1);
 		playerOne.setName("Player One");
 		Player playerTwo = new Player(this, 2);
@@ -62,7 +66,7 @@ public class GameController implements Runnable {
 		keyBindings = new KeyBindings(panel);
 		keyBindings.setPlayerOneInput(playerOne.getMoveActions());
 		keyBindings.setPlayerTwoInput(playerTwo.getMoveActions());
-
+		
 	}
 
 	public void startGameloop() {
@@ -140,7 +144,7 @@ public class GameController implements Runnable {
 	{
 		if(gameController == null)
 		{
-			gameController = new GameController();
+			gameController = new GameController(GAME_TITLE);
 		}
 		return gameController;
 	}
@@ -189,4 +193,38 @@ public class GameController implements Runnable {
 	public void setGameStateManagerFactory(GameStateManagerFactory gameStateManagerFactory) {
 		this.gameStateManagerFactory = gameStateManagerFactory;
 	}
+
+	public static int getWIDTH() {
+		return WIDTH;
+	}
+
+	public static void setWIDTH(int wIDTH) {
+		WIDTH = wIDTH;
+	}
+
+	public static int getHEIGHT() {
+		return HEIGHT;
+	}
+
+	public static void setHEIGHT(int hEIGHT) {
+		HEIGHT = hEIGHT;
+	}
+
+	public static int getUPS() {
+		return UPS;
+	}
+
+	public static void setUPS(int uPS) {
+		UPS = uPS;
+	}
+
+	public static int getFPS() {
+		return FPS;
+	}
+
+	public static void setFPS(int fPS) {
+		FPS = fPS;
+	}
+	
+	
 }
