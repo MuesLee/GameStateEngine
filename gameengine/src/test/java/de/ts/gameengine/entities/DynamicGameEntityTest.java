@@ -13,8 +13,8 @@ public class DynamicGameEntityTest {
 	private static final int FALL_SPEED_MAX = 10;
 	private static final int FALL_SPEED_INCREASE_RATE = 5;
 	private static final Animation ANIMATION2 = new Animation();
-	private static final int JUMP_SPEED_INCREASE = 5;
-	private static final int JUMP_SPEED_TAKE_OFF_SPEED = 10;
+//	private static final int JUMP_SPEED_INCREASE = 5;
+//	private static final int JUMP_SPEED_TAKE_OFF_SPEED = 10;
 	public static final int JUMP_SPEED_MAX = 10;
 	private static final int MOVE_SPEED_SLOW_DOWN_RATE = 5;
 	private static final int MOVE_SPEED_INCREASE_RATE = 5;
@@ -35,9 +35,6 @@ public class DynamicGameEntityTest {
 		classUnderTest.setMoveSpeedMax(MOVE_SPEED_MAX);
 		classUnderTest.setMoveSpeedIncreaseRate(MOVE_SPEED_INCREASE_RATE);
 		classUnderTest.setMoveSpeedSlowDownRate(MOVE_SPEED_SLOW_DOWN_RATE);
-		classUnderTest.setJumpSpeedMax(JUMP_SPEED_MAX);
-		classUnderTest.setJumpSpeedTakeOffSpeed(JUMP_SPEED_TAKE_OFF_SPEED);
-		classUnderTest.setJumpSpeedIncrease(JUMP_SPEED_INCREASE);
 		classUnderTest.setAnimation(ANIMATION2);
 		classUnderTest.setFallSpeedIncreaseRate(FALL_SPEED_INCREASE_RATE);
 		classUnderTest.setFallSpeedMax(FALL_SPEED_MAX);
@@ -134,51 +131,6 @@ public class DynamicGameEntityTest {
 		int actual = classUnderTest.getX();
 		
 		assertEquals(expected, actual);
-	}
-	@Test
-	public void testEntityJumps1Step() throws Exception {
-		
-		moveActions.setJump(true);
-		classUnderTest.setStandsOnSolidGround(true);
-		
-		classUnderTest.update();
-		
-		int expected = -(JUMP_SPEED_TAKE_OFF_SPEED+JUMP_SPEED_INCREASE);
-		int actual = classUnderTest.getY();
-		
-		assertEquals(expected, actual);
-	}
-	@Test
-	public void testEntityJumps2Step() throws Exception {
-		
-		classUnderTest.setStandsOnSolidGround(true);
-		moveActions.setJump(true);
-		classUnderTest.update();
-		moveActions.setJump(true);
-		classUnderTest.setStandsOnSolidGround(false);
-		classUnderTest.update();
-		
-		int expected = -(JUMP_SPEED_TAKE_OFF_SPEED+JUMP_SPEED_INCREASE+2*JUMP_SPEED_INCREASE);
-		int actual = classUnderTest.getY();
-		
-		assertEquals(expected, actual);
-	}
-	@Test
-	public void testEntityJumps1StepWhileRight() throws Exception {
-		
-		moveActions.setJump(true);
-		classUnderTest.setStandsOnSolidGround(true);
-		moveActions.setRight(true);
-		
-		classUnderTest.update();
-		
-		int expectedY = -(JUMP_SPEED_TAKE_OFF_SPEED+JUMP_SPEED_INCREASE);
-		int actualY = classUnderTest.getY();
-		int expectedX = MOVE_SPEED_INCREASE_RATE;
-		int actualX = classUnderTest.getX();
-		
-		assertEquals(expectedY, actualY);
-		assertEquals(expectedX, actualX);
 	}
 	@Test
 	public void testEntityFalls1Step() throws Exception {

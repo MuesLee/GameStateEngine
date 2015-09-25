@@ -54,6 +54,7 @@ public class EightWayMovementHandler implements AnalogMoveActionHandler  {
 		else if(controlAction.isRight()){
 			direction = AnalogDirection.RIGHT;
 		}
+		controlAction.resetMoveActions();
 		return direction;
 	}
 }

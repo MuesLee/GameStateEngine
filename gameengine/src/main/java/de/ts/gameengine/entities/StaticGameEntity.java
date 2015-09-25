@@ -3,9 +3,14 @@ package de.ts.gameengine.entities;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ArrayBlockingQueue;
+
+import com.google.common.eventbus.Subscribe;
 
 import de.ts.gameengine.collision.Collision;
 import de.ts.gameengine.controller.GameController;
+import de.ts.gameengine.entities.actions.EntityEvent;
+import de.ts.gameengine.entities.actions.LongLastingModifier;
 
 
 public abstract class StaticGameEntity {
@@ -19,29 +24,35 @@ public abstract class StaticGameEntity {
 	protected int height;
 
 	protected String name;
-
+	
+	protected ArrayBlockingQueue<LongLastingModifier> activeEntityEvents;
+	
 	protected BufferedImage image;
 	
 	public StaticGameEntity() {
 		super();
-		
+		this.activeEntityEvents = new ArrayBlockingQueue<>(2, true);
 		id = GameController.getNextIDForEntity();
 		
 	}
 
 	public void update() {
-
-		processInputs();
-
-		System.out.println(name + ": X " + x);
-		System.out.println(name + ": Y " + y);
+		
+		for (LongLastingModifier event : activeEntityEvents) {
+		}
 
 	}
-
-	protected void processInputs() {
-		// TODO Auto-generated method stub
-
+	
+	@Subscribe
+	public void handleEntityEvents(EntityEvent event)
+	{
+		//TODO: EVENT HANDLING
+		if(event instanceof LongLastingModifier)
+		{
+			activeEntityEvents.add((LongLastingModifier) event);
+		}
 	}
+	
 
 	public void draw(Graphics2D g2d) {
 
@@ -105,6 +116,15 @@ public abstract class StaticGameEntity {
 
 	public boolean contains(Rectangle r) {
 		return getCollisionBox().contains(r);
+	}
+	
+	protected void addEntityEventToQueue(LongLastingModifier event)
+	{
+		activeEntityEvents.add(event);
+	}
+	protected boolean removedEntityEventFromQueue(LongLastingModifier event)
+	{
+		return activeEntityEvents.remove(event);
 	}
 
 	public void setPosition(int x, int y) {

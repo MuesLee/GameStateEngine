@@ -26,6 +26,7 @@ public class HorizontalMovementHandler  implements AnalogMoveActionHandler {
 			direction = AnalogDirection.RIGHT;
 			
 		}
+		controlAction.resetMoveActions();
 		return direction;
 	}
 	

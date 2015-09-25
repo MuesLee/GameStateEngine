@@ -25,11 +25,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	protected double moveSpeedSlowDownRate;
 	protected double moveSpeedIncreaseRate;
 	
-	protected double jumpSpeed;
-	protected double jumpSpeedTakeOffSpeed;
-	protected double jumpSpeedIncreaseRate;
-	protected double jumpSpeedMax;
-	
 	protected double fallSpeed;
 	protected double fallSpeedIncreaseRate;
 	protected double fallSpeedMax;
@@ -50,7 +45,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	public void update() {
 
 		move();
-		controlActions.reset();
 		getAnimation().update();
 	}
 
@@ -77,37 +71,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		Diff diff = currentViewDirection.getDiff();
 		x = (int) (x + (diff.getVectorX()*moveSpeed));				
 		y = (int) (y + (diff.getVectorY()*moveSpeed));				
-		
-		if (getMoveActions().isJump()) {
-			if (standsOnSolidGround) {
-				jumpSpeed = Math.min(getJumpSpeedMax(), jumpSpeed
-						+ jumpSpeedTakeOffSpeed);
-				y-=jumpSpeed;
-				isJumping = true;
-			}
-			else {
-				if(isJumping)
-				{
-					jumpSpeed = Math.min(getJumpSpeedMax(), jumpSpeed
-							+ jumpSpeedIncreaseRate);
-					if(jumpSpeed == jumpSpeedMax)
-					{
-						isJumping = false;
-					}
-					y-=jumpSpeed;
-				}
-			}
-		} else {
-			if(!standsOnSolidGround)
-			{
-				setFallSpeed(Math.min(fallSpeedMax, getFallSpeed()
-						+ fallSpeedIncreaseRate));
-				y+= fallSpeed;
-			}
-			else {
-				setFallSpeed(0);
-			}
-		}
 	}
 	
 	@Override
@@ -127,30 +90,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 	public void setMoveSpeedSlowDownRate(double moveSpeedSlowDownRate) {
 		this.moveSpeedSlowDownRate = moveSpeedSlowDownRate;
-	}
-
-	public double getJumpSpeedMax() {
-		return jumpSpeedMax;
-	}
-
-	public void setJumpSpeedMax(double jumpSpeedMax) {
-		this.jumpSpeedMax =jumpSpeedMax;
-	}
-
-	public double getJumpSpeed() {
-		return jumpSpeed;
-	}
-
-	public void setJumpSpeed(double jumpSpeed) {
-		this.jumpSpeed = jumpSpeed;
-	}
-
-	public double getJumpSpeedIncrease() {
-		return jumpSpeedIncreaseRate;
-	}
-
-	public void setJumpSpeedIncrease(double jumpSpeedIncrease) {
-		this.jumpSpeedIncreaseRate = jumpSpeedIncrease;
 	}
 
 	public AnalogControlAction getMoveActions() {
@@ -217,13 +156,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.isJumping = isJumping;
 	}
 
-	public double getJumpSpeedTakeOffSpeed() {
-		return jumpSpeedTakeOffSpeed;
-	}
-
-	public void setJumpSpeedTakeOffSpeed(double jumpSpeedTakeOffSpeed) {
-		this.jumpSpeedTakeOffSpeed = jumpSpeedTakeOffSpeed;
-	}
 
 	public double getFallSpeed() {
 		return fallSpeed;
@@ -233,14 +165,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.fallSpeed = fallSpeed;
 	}
 
-
-	public double getJumpSpeedIncreaseRate() {
-		return jumpSpeedIncreaseRate;
-	}
-
-	public void setJumpSpeedIncreaseRate(double jumpSpeedIncreaseRate) {
-		this.jumpSpeedIncreaseRate = jumpSpeedIncreaseRate;
-	}
 
 	public AnalogDirection getCurrentMoveDirection() {
 		return currentMoveDirection;

@@ -25,8 +25,6 @@ public class Player extends DynamicGameEntity {
 		this.setPlayerID(playerID);
 		setMoveSpeedIncreaseRate(5);
 		setMoveSpeedMax(15);
-		setJumpSpeedIncrease(2);
-		setJumpSpeedMax(7);
 		setMoveSpeedSlowDownRate(7.5);
 		setFallSpeedIncreaseRate(1);
 		setFallSpeedMax(5);

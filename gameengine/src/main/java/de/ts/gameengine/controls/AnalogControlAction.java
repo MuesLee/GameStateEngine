@@ -1,60 +1,57 @@
 package de.ts.gameengine.controls;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class AnalogControlAction {
 
-	private boolean left;
-	private boolean right;
-	private boolean up;
-	private boolean down;
+	private AtomicBoolean left;
+	private AtomicBoolean right;
+	private AtomicBoolean up;
+	private AtomicBoolean down;
 	
-	private boolean start;
-	private boolean jump;
-	
+	private AtomicBoolean start;
 	public boolean isLeft() {
-		return left;
+		return left.get();
 	}
 	public void setLeft(boolean left) {
-		this.left = left;
+		this.left.set(left);
 	}
 	public boolean isRight() {
-		return right;
+		return right.get();
 	}
 	public void setRight(boolean right) {
-		this.right = right;
+		this.right.set(right);
 	}
 	public boolean isUp() {
-		return up;
+		return up.get();
 	}
 	public void setUp(boolean up) {
-		this.up = up;
+		this.up.set( up);
 	}
 	public boolean isDown() {
-		return down;
+		return down.get();
 	}
 	public void setDown(boolean down) {
-		this.down = down;
+		this.down.set(down);
 	}
 	public boolean isStart() {
-		return start;
+		return start.get();
 	}
 	public void setStart(boolean start) {
-		this.start = start;
-	}
-	public void reset() {
-		left = false;
-		right = false;
-		up = false;
-		down = false;
-		start = false;
-	}
-	public boolean isJump() {
-		return jump;
+		this.start.set(start);
 	}
 	
-	public void setJump(boolean jump) {
-	this.jump = jump; 
+	public void resetMoveActions()
+	{
+		setUp(false);
+		setDown(false);
+		setLeft(false);
+		setRight(false);
 	}
-
 	
+	public void resetSpecialActions()
+	{
+		setStart(false);
+	}
 	
 }

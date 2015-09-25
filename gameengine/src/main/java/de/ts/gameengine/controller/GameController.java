@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.google.common.eventbus.EventBus;
+
 import de.ts.gameengine.controls.KeyBindings;
 import de.ts.gameengine.entities.Player;
 import de.ts.gameengine.entities.movement.EightWayMovementHandler;
@@ -26,11 +28,13 @@ public class GameController implements Runnable {
 
 	private static final boolean RENDER_TIME = true;
 
+	private static GameController instance;
+	
 	private GameStateManagerFactory gameStateManagerFactory;
 	private GameStateManager gameStateManager;
 	
+	private static EventBus eventBus  = new EventBus("Mainbus");
 	
-
 	private GameFrame frame;
 
 	protected KeyBindings keyBindings;
@@ -68,6 +72,7 @@ public class GameController implements Runnable {
 		Player playerOne = new Player(this, movementHandler, 1);
 		playerOne.setName("Player One");
 		getPlayers().add(playerOne);
+		eventBus.register(playerOne);
 		keyBindings = new KeyBindings(panel);
 		keyBindings.setPlayerOneInput(playerOne.getMoveActions());
 		
@@ -221,6 +226,16 @@ public class GameController implements Runnable {
 	public static void setFPS(int fPS) {
 		FPS = fPS;
 	}
-	
-	
+
+	public static EventBus getEventBus() {
+		return eventBus;
+	}
+
+	public static GameController getInstance() {
+		if(instance== null)
+		{
+			instance = new GameController(GAME_TITLE);
+		}
+		return instance;
+	}
 }

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.ts</groupId>
 	<artifactId>gameengine</artifactId>
-	<version>0.6.2-SNAPSHOT</version>
+	<version>0.6.3-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>
@@ -20,6 +20,12 @@
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.5</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

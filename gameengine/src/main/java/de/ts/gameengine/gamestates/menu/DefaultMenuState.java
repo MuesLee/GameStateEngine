@@ -59,8 +59,8 @@ public class DefaultMenuState extends AbstractGameState {
 		{
 			handleMenuItemChoice(menuItems.get(selectedMenuItem));
 		}
-		
-		playerOneMoveAction.reset();
+		playerOneMoveAction.resetMoveActions();
+		playerOneMoveAction.resetSpecialActions();
 	}
 
 	@Override
