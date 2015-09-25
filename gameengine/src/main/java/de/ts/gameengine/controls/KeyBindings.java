@@ -7,12 +7,10 @@ import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
-import de.ts.gameengine.entities.ControlAction;
-
 public class KeyBindings {
 
-	private ControlAction playerOneInput = new ControlAction();
-	private ControlAction playerTwoInput = new ControlAction();
+	private AnalogControlAction playerOneInput = new AnalogControlAction();
+	private AnalogControlAction playerTwoInput = new AnalogControlAction();
 
 	@SuppressWarnings("serial")
 	public KeyBindings(JComponent gp) {
@@ -182,19 +180,19 @@ public class KeyBindings {
 		});
 	}
 
-	public ControlAction getPlayerOneInput() {
+	public AnalogControlAction getPlayerOneInput() {
 		return playerOneInput;
 	}
 
-	public void setPlayerOneInput(ControlAction playerOneInput) {
+	public void setPlayerOneInput(AnalogControlAction playerOneInput) {
 		this.playerOneInput = playerOneInput;
 	}
 
-	public ControlAction getPlayerTwoInput() {
+	public AnalogControlAction getPlayerTwoInput() {
 		return playerTwoInput;
 	}
 
-	public void setPlayerTwoInput(ControlAction playerTwoInput) {
+	public void setPlayerTwoInput(AnalogControlAction playerTwoInput) {
 		this.playerTwoInput = playerTwoInput;
 	}
 }

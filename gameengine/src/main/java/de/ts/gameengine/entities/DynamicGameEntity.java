@@ -4,22 +4,26 @@ import java.awt.Graphics2D;
 
 import de.ts.gameengine.collision.Collision;
 import de.ts.gameengine.collision.CollisionSide;
+import de.ts.gameengine.controls.AnalogControlAction;
+import de.ts.gameengine.controls.AnalogDirection;
+import de.ts.gameengine.entities.movement.AnalogMoveActionHandler;
+import de.ts.gameengine.entities.movement.Diff;
 
 public abstract class DynamicGameEntity extends StaticGameEntity {
 
-	protected boolean isFacingRight;
 	protected boolean standsOnSolidGround;
 	protected boolean isJumping;
+	protected AnalogDirection currentMoveDirection;
+	
+	protected AnalogDirection currentViewDirection = AnalogDirection.RIGHT;
 
-	private ControlAction moveActions;
-
-	protected double moveSpeedX;
-	protected double moveSpeedXMax;
-	protected double moveSpeedY;
-	protected double moveSpeedYMax;
+	private AnalogControlAction controlActions;
+	private AnalogMoveActionHandler movementHandler;
+	
+	protected double moveSpeed;
+	protected double moveSpeedMax;
 	protected double moveSpeedSlowDownRate;
-	protected double moveSpeedXIncreaseRate;
-	protected double moveSpeedYIncreaseRate;
+	protected double moveSpeedIncreaseRate;
 	
 	protected double jumpSpeed;
 	protected double jumpSpeedTakeOffSpeed;
@@ -34,10 +38,10 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	protected int currentAction;
 	protected int previousAction;
 
-	public DynamicGameEntity() {
+	public DynamicGameEntity(AnalogMoveActionHandler movementHandler) {
 		super();
-
-		this.setMoveActions(new ControlAction());
+		this.setMovementHandler(movementHandler);
+		this.setMoveActions(new AnalogControlAction());
 		setAnimation(new Animation());
 
 	}
@@ -46,7 +50,7 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	public void update() {
 
 		move();
-		moveActions.reset();
+		controlActions.reset();
 		getAnimation().update();
 	}
 
@@ -56,31 +60,23 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	}
 
 	private void move() {
-
-		// X Axis
-		if (getMoveActions().isRight()) {
-			moveSpeedX = Math.min(moveSpeedXMax, moveSpeedX
-					+ moveSpeedXIncreaseRate);
-			x += moveSpeedX;
-		} else if (getMoveActions().isLeft()) {
-			moveSpeedX = Math.min(moveSpeedXMax, moveSpeedX
-					+ moveSpeedXIncreaseRate);
-			x -= moveSpeedX;
-		} else {
-			moveSpeedX = Math.max(0, moveSpeedX-moveSpeedSlowDownRate);
+		
+		AnalogDirection convertMovementOfControlAction = movementHandler.convertMovementOfControlAction(controlActions);
+		
+		if(convertMovementOfControlAction != null)
+		{
+			currentViewDirection = convertMovementOfControlAction;
+			
+			moveSpeed = Math.min(moveSpeedMax, moveSpeed+moveSpeedIncreaseRate);
 		}
-		// Y Axis
-		if (getMoveActions().isUp()) {
-			moveSpeedY = Math.min(moveSpeedYMax, moveSpeedY
-					+ moveSpeedYIncreaseRate);
-			y += moveSpeedY;
-		} else if (getMoveActions().isDown()) {
-			moveSpeedY = Math.min(moveSpeedYMax, moveSpeedY
-					+ moveSpeedYIncreaseRate);
-			y -= moveSpeedY;
-		} else {
-			moveSpeedY = Math.max(0, moveSpeedY-moveSpeedSlowDownRate);
+		else 
+		{
+			moveSpeed = Math.max(0, moveSpeed-moveSpeedSlowDownRate);
 		}
+		
+		Diff diff = currentViewDirection.getDiff();
+		x = (int) (x + (diff.getVectorX()*moveSpeed));				
+		y = (int) (y + (diff.getVectorY()*moveSpeed));				
 		
 		if (getMoveActions().isJump()) {
 			if (standsOnSolidGround) {
@@ -125,14 +121,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		
 	}
 
-	public boolean isFacingRight() {
-		return isFacingRight;
-	}
-
-	public void setFacingRight(boolean isFacingRight) {
-		this.isFacingRight = isFacingRight;
-	}
-
 	public double getMoveSpeedSlowDownRate() {
 		return moveSpeedSlowDownRate;
 	}
@@ -165,12 +153,12 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.jumpSpeedIncreaseRate = jumpSpeedIncrease;
 	}
 
-	public ControlAction getMoveActions() {
-		return moveActions;
+	public AnalogControlAction getMoveActions() {
+		return controlActions;
 	}
 
-	public void setMoveActions(ControlAction moveActions) {
-		this.moveActions = moveActions;
+	public void setMoveActions(AnalogControlAction moveActions) {
+		this.controlActions = moveActions;
 	}
 
 	public Animation getAnimation() {
@@ -245,37 +233,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.fallSpeed = fallSpeed;
 	}
 
-	public double getMoveSpeedX() {
-		return moveSpeedX;
-	}
-
-	public void setMoveSpeedX(double moveSpeedX) {
-		this.moveSpeedX = moveSpeedX;
-	}
-
-	public double getMoveSpeedXMax() {
-		return moveSpeedXMax;
-	}
-
-	public void setMoveSpeedXMax(double moveSpeedXMax) {
-		this.moveSpeedXMax = moveSpeedXMax;
-	}
-
-	public double getMoveSpeedY() {
-		return moveSpeedY;
-	}
-
-	public void setMoveSpeedY(double moveSpeedY) {
-		this.moveSpeedY = moveSpeedY;
-	}
-
-	public double getMoveSpeedYMax() {
-		return moveSpeedYMax;
-	}
-
-	public void setMoveSpeedYMax(double moveSpeedYMax) {
-		this.moveSpeedYMax = moveSpeedYMax;
-	}
 
 	public double getJumpSpeedIncreaseRate() {
 		return jumpSpeedIncreaseRate;
@@ -285,19 +242,53 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.jumpSpeedIncreaseRate = jumpSpeedIncreaseRate;
 	}
 
-	public double getMoveSpeedXIncreaseRate() {
-		return moveSpeedXIncreaseRate;
+	public AnalogDirection getCurrentMoveDirection() {
+		return currentMoveDirection;
 	}
 
-	public void setMoveSpeedXIncreaseRate(double moveSpeedXIncreaseRate) {
-		this.moveSpeedXIncreaseRate = moveSpeedXIncreaseRate;
+	public void setCurrentMoveDirection(AnalogDirection currentMoveDirection) {
+		this.currentMoveDirection = currentMoveDirection;
 	}
 
-	public double getMoveSpeedYIncreaseRate() {
-		return moveSpeedYIncreaseRate;
+	public AnalogMoveActionHandler getMovementHandler() {
+		return movementHandler;
 	}
 
-	public void setMoveSpeedYIncreaseRate(double moveSpeedYIncreaseRate) {
-		this.moveSpeedYIncreaseRate = moveSpeedYIncreaseRate;
+	public void setMovementHandler(AnalogMoveActionHandler movementHandler) {
+		this.movementHandler = movementHandler;
 	}
+
+	public AnalogDirection getCurrentViewDirection() {
+		return currentViewDirection;
+	}
+
+	public void setCurrentViewDirection(AnalogDirection currentViewDirection) {
+		this.currentViewDirection = currentViewDirection;
+	}
+
+	public double getMoveSpeed() {
+		return moveSpeed;
+	}
+
+	public void setMoveSpeed(double moveSpeed) {
+		this.moveSpeed = moveSpeed;
+	}
+
+	public double getMoveSpeedMax() {
+		return moveSpeedMax;
+	}
+
+	public void setMoveSpeedMax(double moveSpeedMax) {
+		this.moveSpeedMax = moveSpeedMax;
+	}
+
+	public double getMoveSpeedIncreaseRate() {
+		return moveSpeedIncreaseRate;
+	}
+
+	public void setMoveSpeedIncreaseRate(double moveSpeedIncreaseRate) {
+		this.moveSpeedIncreaseRate = moveSpeedIncreaseRate;
+	}
+	
+	
 }

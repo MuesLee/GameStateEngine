@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.ts.gameengine.controls.KeyBindings;
 import de.ts.gameengine.entities.Player;
+import de.ts.gameengine.entities.movement.EightWayMovementHandler;
 import de.ts.gameengine.gamestates.GameStateManager;
 import de.ts.gameengine.gamestates.GameStateManagerFactory;
 import de.ts.gameengine.view.GameFrame;
@@ -63,14 +64,12 @@ public class GameController implements Runnable {
 	protected void configurePlayers()
 	{
 		
-		Player playerOne = new Player(this, 1);
+		EightWayMovementHandler movementHandler = new EightWayMovementHandler();
+		Player playerOne = new Player(this, movementHandler, 1);
 		playerOne.setName("Player One");
-		Player playerTwo = new Player(this, 2);
-		playerTwo.setName("Player Two");
 		getPlayers().add(playerOne);
 		keyBindings = new KeyBindings(panel);
 		keyBindings.setPlayerOneInput(playerOne.getMoveActions());
-		keyBindings.setPlayerTwoInput(playerTwo.getMoveActions());
 		
 	}
 

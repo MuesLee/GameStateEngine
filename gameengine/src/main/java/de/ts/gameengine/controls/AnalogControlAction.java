@@ -1,6 +1,6 @@
-package de.ts.gameengine.entities;
+package de.ts.gameengine.controls;
 
-public class ControlAction {
+public class AnalogControlAction {
 
 	private boolean left;
 	private boolean right;

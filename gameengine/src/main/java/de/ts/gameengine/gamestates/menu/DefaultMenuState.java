@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.ts.gameengine.controller.GameController;
-import de.ts.gameengine.entities.ControlAction;
+import de.ts.gameengine.controls.AnalogControlAction;
 import de.ts.gameengine.gamestates.AbstractGameState;
 import de.ts.gameengine.view.Background;
 
@@ -19,7 +19,7 @@ public class DefaultMenuState extends AbstractGameState {
 	private Color titleColor;
 	private Color color;
 
-	private ControlAction playerOneMoveAction;
+	private AnalogControlAction playerOneMoveAction;
 	
 	private List<MenuItem> menuItems;
 
