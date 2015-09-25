@@ -8,8 +8,8 @@ import de.ts.gameengine.entities.StaticGameEntity;
 
 public class Quadtree {
 
-	private static final int TOP_LEFT_QUADRANT = 1;
 	private static final int TOP_RIGHT_QUADRANT = 0;
+	private static final int TOP_LEFT_QUADRANT = 1;
 	private static final int BOTTOM_LEFT_QUADRANT = 2;
 	private static final int BOTTOM_RIGHT_QUADRANT = 3;
 
@@ -64,16 +64,6 @@ public class Quadtree {
 		nodes[BOTTOM_RIGHT_QUADRANT] = new Quadtree(level + 1, new Rectangle(x
 				+ halvedWidth, y + halvedHeight, halvedWidth, halvedHeight),
 				maxObjects, maxLevels);
-
-		// Iterator<StaticGameEntity> iterator = entities.iterator();
-		// while (iterator.hasNext()) {
-		// StaticGameEntity entity = iterator.next();
-		// int index = getIndex(entity);
-		// if (index != -1) {
-		// nodes[index].insert(entity);
-		// iterator.remove();
-		// }
-		// }
 	}
 
 	/**
