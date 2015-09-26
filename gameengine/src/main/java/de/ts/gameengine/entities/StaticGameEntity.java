@@ -17,6 +17,10 @@ public abstract class StaticGameEntity {
 
 	private long id;
 
+	private int healthPoints;
+	private int maxHealthPoints;
+	private int healthPointReg;
+	
 	protected int x;
 	protected int y;
 
@@ -41,6 +45,7 @@ public abstract class StaticGameEntity {
 		for (LongLastingModifier event : activeEntityEvents) {
 		}
 
+		healthPoints = Math.min(healthPoints+healthPointReg, maxHealthPoints);
 	}
 	
 	@Subscribe
@@ -200,5 +205,29 @@ public abstract class StaticGameEntity {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	public int getHealthPoints() {
+		return healthPoints;
+	}
+
+	public void setHealthPoints(int healthPoints) {
+		this.healthPoints = healthPoints;
+	}
+
+	public int getHealthPointReg() {
+		return healthPointReg;
+	}
+
+	public void setHealthPointReg(int healthPointReg) {
+		this.healthPointReg = healthPointReg;
+	}
+
+	public int getMaxHealthPoints() {
+		return maxHealthPoints;
+	}
+
+	public void setMaxHealthPoints(int maxHealthPoints) {
+		this.maxHealthPoints = maxHealthPoints;
 	}
 }
