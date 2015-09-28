@@ -136,7 +136,6 @@ public class AudioController
 
 		new Thread(new Runnable()
 		{
-
 			@Override
 			public void run()
 			{
