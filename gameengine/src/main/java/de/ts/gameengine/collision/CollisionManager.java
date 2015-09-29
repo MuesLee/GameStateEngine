@@ -54,7 +54,6 @@ public class CollisionManager {
 		dynamicQuadtree.insert(entity);
 	}
 	
-	
 	/**
 	 * Fügt eine statische, unbewegliche Entity dem statischen Quadtree hinzu.
 	 * 
