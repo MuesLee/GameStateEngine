@@ -75,12 +75,10 @@ public class Quadtree {
 	 * @return Index des Quadranten. -1 wenn es nicht vollständig in einen
 	 *         Quadranten passt.
 	 */
-	private int getIndex(StaticGameEntity entitiy) {
+	private int getIndex(Rectangle rectangle) {
 		int index = -1;
 		double midpointX = bounds.getX() + (bounds.getWidth() / 2);
 		double midpointY = bounds.getY() + (bounds.getHeight() / 2);
-
-		Rectangle rectangle = entitiy.getCollisionBox();
 
 		// Rechteck passt komplett in die obere Hälfte des Quadtrees
 		boolean topQuadrants = (rectangle.getY() < midpointY && rectangle.getY()
@@ -117,7 +115,7 @@ public class Quadtree {
 	 */
 	public void insert(StaticGameEntity entity) {
 
-		int index = getIndex(entity);
+		int index = getIndex(entity.getCollisionBox());
 
 		if (index != -1 && nodes[index] != null) {
 			nodes[index].insert(entity);
@@ -133,18 +131,18 @@ public class Quadtree {
 	 * 
 	 * @param returnObjects
 	 *            Ergebnisliste für rekursiven Aufruf. Darf initial null sein.
-	 * @param entity
+	 * @param rectangle
 	 *            zu überprüfendes Rechteck
 	 * @return Liste mit Rechtecken, die mit dem übergebenen kollidieren könnten
 	 */
 	public List<StaticGameEntity> retrieve(
-			List<StaticGameEntity> returnObjects, StaticGameEntity entity) {
+			List<StaticGameEntity> returnObjects, Rectangle rectangle) {
 
 		if (returnObjects == null) {
 			returnObjects = new ArrayList<>(maxObjects);
 		}
 
-		int index = getIndex(entity);
+		int index = getIndex(rectangle);
 
 		if (index == -1) {
 
@@ -152,14 +150,14 @@ public class Quadtree {
 
 			for (int i = 0; i < nodes.length; i++) {
 				if (nodes[i] != null) {
-					nodes[i].retrieve(returnObjects, entity);
+					nodes[i].retrieve(returnObjects, rectangle);
 				}
 			}
 
 		} else {
 			if (nodes[index] != null) {
 				returnObjects.addAll(entities);
-				nodes[index].retrieve(returnObjects, entity);
+				nodes[index].retrieve(returnObjects, rectangle);
 			} else {
 				returnObjects.addAll(entities);
 			}

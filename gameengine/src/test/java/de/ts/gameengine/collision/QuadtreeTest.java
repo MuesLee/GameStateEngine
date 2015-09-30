@@ -38,7 +38,7 @@ public class QuadtreeTest {
 		Mockito.when(givenEntity.getCollisionBox()).thenReturn(givenRectangle);
 		Mockito.when(givenEntity.getId()).thenReturn(3L);
 
-		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity);
+		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity.getCollisionBox());
 		List<StaticGameEntity> expected = new ArrayList<StaticGameEntity>();
 		expected.add(entityTopLeft);
 
@@ -52,7 +52,7 @@ public class QuadtreeTest {
 		Mockito.when(givenEntity.getCollisionBox()).thenReturn(givenRectangle);
 		Mockito.when(givenEntity.getId()).thenReturn(0L);
 
-		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity);
+		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity.getCollisionBox());
 		List<StaticGameEntity> expected = new ArrayList<StaticGameEntity>();
 		expected.add(entityTopRight);
 		assertEquals(expected, actual);
@@ -65,7 +65,7 @@ public class QuadtreeTest {
 		Mockito.when(givenEntity.getCollisionBox()).thenReturn(givenRectangle);
 		Mockito.when(givenEntity.getId()).thenReturn(2L);
 
-		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity);
+		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity.getCollisionBox());
 		List<StaticGameEntity> expected = new ArrayList<StaticGameEntity>();
 		expected.add(entityBotLeft);
 		assertEquals(expected, actual);
@@ -78,7 +78,7 @@ public class QuadtreeTest {
 		Mockito.when(givenEntity.getCollisionBox()).thenReturn(givenRectangle);
 		Mockito.when(givenEntity.getId()).thenReturn(1L);
 
-		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity);
+		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity.getCollisionBox());
 		List<StaticGameEntity> expected = new ArrayList<StaticGameEntity>();
 		expected.add(entityBotRight);
 		assertEquals(expected, actual);
@@ -90,7 +90,7 @@ public class QuadtreeTest {
 
 		Rectangle givenRectangle = new Rectangle(0, 0, 100, 100);
 		Mockito.when(givenEntity.getCollisionBox()).thenReturn(givenRectangle);
-		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity);
+		List<StaticGameEntity> actual = quadtree.retrieve(null, givenEntity.getCollisionBox());
 		List<StaticGameEntity> expected = new ArrayList<StaticGameEntity>();
 		expected.add(entityBotLeft);
 		expected.add(entityBotRight);
@@ -193,7 +193,7 @@ public class QuadtreeTest {
 	@Test
 	public void shouldClearDefaultQuadtree() throws Exception {
 		quadtree.clear();
-		List<StaticGameEntity> actual = quadtree.retrieve(null, entityBotLeft);
+		List<StaticGameEntity> actual = quadtree.retrieve(null, entityBotLeft.getCollisionBox());
 		assertTrue(actual.isEmpty());
 	}
 
@@ -203,7 +203,7 @@ public class QuadtreeTest {
 		initEmptyQuadTree(new Rectangle (0,0,160,160),5,1);
 
 		quadtree.insert(entityTopRight);
-		List<StaticGameEntity> actual = quadtree.retrieve(null, entityBotLeft);
+		List<StaticGameEntity> actual = quadtree.retrieve(null, entityBotLeft.getCollisionBox());
 
 		assertTrue(actual.isEmpty());
 	}

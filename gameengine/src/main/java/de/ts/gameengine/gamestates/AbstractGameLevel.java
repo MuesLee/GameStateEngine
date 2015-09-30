@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.ts.gameengine.collision.Collision;
 import de.ts.gameengine.collision.CollisionManager;
-import de.ts.gameengine.entities.Enemy;
+import de.ts.gameengine.entities.DynamicGameEntity;
 import de.ts.gameengine.entities.Player;
 import de.ts.gameengine.view.Camera;
 import de.ts.gameengine.view.TileMap;
@@ -18,12 +18,12 @@ public class AbstractGameLevel extends AbstractGameState {
 
 	protected Camera camera;
 
-	protected ArrayList<Enemy> enemies;
+	private ArrayList<DynamicGameEntity> otherDynamicEntities;
 
 	public AbstractGameLevel() {
 		super();
 		this.collisionManager = new CollisionManager(this);
-		this.enemies = new ArrayList<Enemy>();
+		this.setOtherDynamicEntities(new ArrayList<DynamicGameEntity>());
 	}
 
 	@Override
@@ -35,12 +35,12 @@ public class AbstractGameLevel extends AbstractGameState {
 
 		drawTileMap(g2d);
 		drawPlayer(g2d);
-		drawEnemies(g2d);
+		drawOtherEntities(g2d);
 	}
 
-	private void drawEnemies(Graphics2D g2d) {
-		for (Enemy enemy : enemies) {
-			enemy.draw(g2d);
+	private void drawOtherEntities(Graphics2D g2d) {
+		for (DynamicGameEntity entity : getOtherDynamicEntities()) {
+			entity.draw(g2d);
 		}
 	}
 
@@ -56,15 +56,33 @@ public class AbstractGameLevel extends AbstractGameState {
 
 	@Override
 	public void update() {
+		
+		prepareEntitiesForUpdate();
+		
+		computeCollisions();
+		
 		background.update();
 		camera.update();
+		
+		updateEntities();
+	}
+
+	private void updateEntities() {
 		for (Player player : getPlayers()) {
 			player.update();
 		}
-		for (Enemy enemy : enemies) {
-			enemy.update();
+		for (DynamicGameEntity entity : getOtherDynamicEntities()) {
+			entity.update();
 		}
-		computeCollisions();
+	}
+
+	private void prepareEntitiesForUpdate() {
+		for (Player player : getPlayers()) {
+			player.prepareUpdate();
+		}
+		for (DynamicGameEntity entity : getOtherDynamicEntities()) {
+			entity.prepareUpdate();
+		}
 	}
 
 	private void computeCollisions() {
@@ -91,11 +109,11 @@ public class AbstractGameLevel extends AbstractGameState {
 		this.camera = camera;
 	}
 
-	public ArrayList<Enemy> getEnemies() {
-		return enemies;
+	public ArrayList<DynamicGameEntity> getOtherDynamicEntities() {
+		return otherDynamicEntities;
 	}
 
-	public void setEnemies(ArrayList<Enemy> enemies) {
-		this.enemies = enemies;
+	public void setOtherDynamicEntities(ArrayList<DynamicGameEntity> otherDynamicEntities) {
+		this.otherDynamicEntities = otherDynamicEntities;
 	}
 }

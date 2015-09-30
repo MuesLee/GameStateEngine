@@ -85,9 +85,9 @@ public class CollisionManager {
 		List<Collision> collidedEntities = new ArrayList<>();
 
 		List<StaticGameEntity> possibleCollisions = dynamicQuadtree.retrieve(null,
-				entity);
+				entity.getCollisionBox());
 		
-		possibleCollisions = dynamicQuadtree.retrieve(possibleCollisions, entity);
+		possibleCollisions = staticQuadtree.retrieve(possibleCollisions, entity.getCollisionBox());
 
 		Rectangle entityBotLine = entity.getBotLine();
 		Rectangle entityTopLine = entity.getTopLine();
