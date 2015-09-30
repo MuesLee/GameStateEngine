@@ -4,11 +4,11 @@ import de.ts.gameengine.controls.AnalogDirection;
 
 public class AnalogMoveAction {
 
-	private Diff diff;
+	private Velocity diff;
 	
 	private AnalogDirection direction;
 
-	public AnalogMoveAction(Diff diff, AnalogDirection direction) {
+	public AnalogMoveAction(Velocity diff, AnalogDirection direction) {
 		super();
 		this.diff = diff;
 		this.direction = direction;
@@ -17,11 +17,11 @@ public class AnalogMoveAction {
 	public AnalogMoveAction() {
 	}
 
-	public Diff getDiff() {
+	public Velocity getDiff() {
 		return diff;
 	}
 
-	public void setDiff(Diff diff) {
+	public void setDiff(Velocity diff) {
 		this.diff = diff;
 	}
 

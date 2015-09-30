@@ -1,14 +1,14 @@
 package de.ts.gameengine.entities.movement;
 
-public class Diff {
+public class Velocity {
 
 	private double vectorX;
 	private double vectorY;
 	
-	public Diff() {
+	public Velocity() {
 	}
 	
-	public Diff(double vectorX, double vectorY) {
+	public Velocity(double vectorX, double vectorY) {
 		super();
 		this.setVectorX(vectorX);
 		this.setVectorY(vectorY);
@@ -24,6 +24,18 @@ public class Diff {
 	}
 	public void setVectorX(double vectorX) {
 		this.vectorX = vectorX;
+	}
+	
+	/**
+	 * Adds the given values to the velocity vector
+	 * 
+	 * @param diffX
+	 * @param diffY
+	 */
+	public void update(double diffX, double diffY)
+	{
+		setVectorX(getVectorX() + diffX);
+		setVectorY(getVectorY() + diffY);
 	}
 	
 	

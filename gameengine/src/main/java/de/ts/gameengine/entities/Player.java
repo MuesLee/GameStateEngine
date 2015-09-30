@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import de.ts.gameengine.controller.GameController;
-import de.ts.gameengine.entities.movement.AnalogMoveActionHandler;
+import de.ts.gameengine.entities.movement.GameInputHandler;
 
 public class Player extends DynamicGameEntity {
 
@@ -20,14 +20,14 @@ public class Player extends DynamicGameEntity {
 	protected GameController gameController;
 	protected int playerID;
 
-	public Player(GameController gameController, AnalogMoveActionHandler movementHandler,int playerID) {
-		super(movementHandler);
+	public Player(GameController gameController, GameInputHandler gameInputHandler,int playerID) {
+		super(gameInputHandler);
 		this.setPlayerID(playerID);
 		setMoveSpeedIncreaseRate(5);
 		setMoveSpeedMax(15);
 		setMoveSpeedSlowDownRate(7.5);
-		setFallSpeedIncreaseRate(1);
-		setFallSpeedMax(5);
+		setJumpSpeedIncreaseRate(5);
+		setJumpSpeedMax(15);
 		this.setGameController(gameController);
 		
 		fillSprites();

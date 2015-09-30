@@ -178,6 +178,24 @@ public class KeyBindings {
 				getPlayerOneInput().setRight((false));
 			}
 		});
+		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true),
+				"Spacebar released");
+		gp.getActionMap().put("Spacebar released", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				getPlayerOneInput().setJump((false));
+			}
+		});
+		gp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),
+				"Spacebar pressed");
+		gp.getActionMap().put("Spacebar pressed", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				getPlayerOneInput().setJump((true));
+			}
+		});
 	}
 
 	public AnalogControlAction getPlayerOneInput() {

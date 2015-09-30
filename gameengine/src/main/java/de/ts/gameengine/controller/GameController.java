@@ -10,6 +10,9 @@ import com.google.common.eventbus.EventBus;
 import de.ts.gameengine.controls.KeyBindings;
 import de.ts.gameengine.entities.Player;
 import de.ts.gameengine.entities.movement.EightWayMovementHandler;
+import de.ts.gameengine.entities.movement.GameInputHandler;
+import de.ts.gameengine.entities.movement.JumpActionHandler;
+import de.ts.gameengine.entities.movement.SpecialMoveActionHandler;
 import de.ts.gameengine.gamestates.GameStateManager;
 import de.ts.gameengine.gamestates.GameStateManagerFactory;
 import de.ts.gameengine.view.GameFrame;
@@ -67,9 +70,10 @@ public class GameController implements Runnable {
 	
 	protected void configurePlayers()
 	{
-		
-		EightWayMovementHandler movementHandler = new EightWayMovementHandler();
-		Player playerOne = new Player(this, movementHandler, 1);
+		EightWayMovementHandler analogMoveActionHandler = new EightWayMovementHandler();
+		SpecialMoveActionHandler specialMoveActionHandler = new JumpActionHandler();
+		GameInputHandler gameInputHandler = new GameInputHandler(analogMoveActionHandler, specialMoveActionHandler );
+		Player playerOne = new Player(this, gameInputHandler, 1);
 		playerOne.setName("Player One");
 		getPlayers().add(playerOne);
 		eventBus.register(playerOne);

@@ -43,6 +43,7 @@ public abstract class StaticGameEntity {
 	public void update() {
 		
 		for (LongLastingModifier event : activeEntityEvents) {
+			event.decreaseDuration();
 		}
 
 		healthPoints = Math.min(healthPoints+healthPointReg, maxHealthPoints);

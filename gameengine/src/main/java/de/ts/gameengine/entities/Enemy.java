@@ -1,10 +1,10 @@
 package de.ts.gameengine.entities;
 
-import de.ts.gameengine.entities.movement.AnalogMoveActionHandler;
+import de.ts.gameengine.entities.movement.GameInputHandler;
 
 public class Enemy extends DynamicGameEntity {
 
-	public Enemy(AnalogMoveActionHandler handler) {
+	public Enemy(GameInputHandler handler) {
 		super(handler);
 	}
 }

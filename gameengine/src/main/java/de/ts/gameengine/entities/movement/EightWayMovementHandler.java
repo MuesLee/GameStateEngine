@@ -3,7 +3,7 @@ package de.ts.gameengine.entities.movement;
 import de.ts.gameengine.controls.AnalogControlAction;
 import de.ts.gameengine.controls.AnalogDirection;
 
-public class EightWayMovementHandler implements AnalogMoveActionHandler  {
+public class EightWayMovementHandler implements AnalogMoveActionHandler {
 
 	
 	@Override
@@ -48,13 +48,12 @@ public class EightWayMovementHandler implements AnalogMoveActionHandler  {
 			}
 		}
 		else if(controlAction.isLeft())
-		{
 			direction = AnalogDirection.LEFT;
-		}
-		else if(controlAction.isRight()){
+		else if(controlAction.isRight())
 			direction = AnalogDirection.RIGHT;
-		}
+		
 		controlAction.resetMoveActions();
+		
 		return direction;
 	}
 }

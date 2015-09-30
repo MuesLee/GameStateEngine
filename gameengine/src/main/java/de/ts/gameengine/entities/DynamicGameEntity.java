@@ -7,40 +7,83 @@ import de.ts.gameengine.collision.CollisionSide;
 import de.ts.gameengine.controls.AnalogControlAction;
 import de.ts.gameengine.controls.AnalogDirection;
 import de.ts.gameengine.entities.movement.AnalogMoveActionHandler;
-import de.ts.gameengine.entities.movement.Diff;
+import de.ts.gameengine.entities.movement.Velocity;
+import de.ts.gameengine.entities.movement.GameInputHandler;
+import de.ts.gameengine.entities.movement.SpecialMoveAction;
+import de.ts.gameengine.entities.movement.SpecialMoveActionHandler;
 
 public abstract class DynamicGameEntity extends StaticGameEntity {
 
 	protected boolean standsOnSolidGround;
 	protected boolean isJumping;
 	protected AnalogDirection currentMoveDirection;
-	
+
 	protected AnalogDirection currentViewDirection = AnalogDirection.RIGHT;
 
 	private AnalogControlAction controlActions;
-	private AnalogMoveActionHandler movementHandler;
-	
+	private GameInputHandler gameInputHandler;
+
 	protected double moveSpeed;
 	protected double moveSpeedMax;
 	protected double moveSpeedSlowDownRate;
 	protected double moveSpeedIncreaseRate;
-	
-	protected double fallSpeed;
-	protected double fallSpeedIncreaseRate;
-	protected double fallSpeedMax;
+
+	protected double jumpSpeed;
+	protected double jumpSpeedMax;
+	protected double jumpSpeedIncreaseRate;
+	protected double jumpSpeedTakeOff;
 
 	protected Animation animation;
 	protected int currentAction;
 	protected int previousAction;
+	private boolean isReadyToJump;
+	private boolean movementHasBeenChecked;
+	private Velocity velocity;
+	
 
-	public DynamicGameEntity(AnalogMoveActionHandler movementHandler) {
+	public DynamicGameEntity(GameInputHandler gameInputHandler) {
 		super();
-		this.setMovementHandler(movementHandler);
+		this.setGameInputHandler(gameInputHandler);
 		this.setMoveActions(new AnalogControlAction());
 		setAnimation(new Animation());
+		this.setVelocity(new Velocity(0,0));
 
 	}
+	
+	/**
+	 * Handle User Inputs and compute Velocity
+	 */
+	public void prepareUpdate()
+	{
+		prepareRegularMovement();
+		
+		prepareSpecialAction();
+	}
 
+	private void prepareRegularMovement() {
+		
+		AnalogMoveActionHandler movementHandler = gameInputHandler.getAnalogMoveActionHandler();
+		AnalogDirection convertMovementOfControlAction = movementHandler.convertMovementOfControlAction(controlActions);
+
+		if (convertMovementOfControlAction != null) {
+			currentViewDirection = convertMovementOfControlAction;
+
+			moveSpeed = Math.min(moveSpeedMax, moveSpeed + moveSpeedIncreaseRate);
+		} else {
+			moveSpeed = Math.max(0, moveSpeed - moveSpeedSlowDownRate);
+		}
+
+		
+		Velocity diff = currentViewDirection.getDiff();
+		double velocityX = diff.getVectorX() * moveSpeed;
+		double velocityY = diff.getVectorY() * moveSpeed;
+		velocity.update(velocityX, velocityY);
+	}
+	
+	
+	/**
+	 * Update Animation and move according to velocity
+	 */
 	@Override
 	public void update() {
 
@@ -48,40 +91,65 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		getAnimation().update();
 	}
 
+	private void prepareSpecialAction() {
+		SpecialMoveActionHandler specialMoveActionHandler = gameInputHandler.getSpecialMoveActionHandler();
+		SpecialMoveAction specialMoveAction = specialMoveActionHandler
+				.convertSpecialActionOfControlAction(controlActions);
+
+		double velocityY = 0;
+		double velocityX = 0;
+		
+		
+		if (specialMoveAction == SpecialMoveAction.JUMP) {
+			if (standsOnSolidGround) {
+				setJumping(true);
+				setStandsOnSolidGround(false);
+				velocityY -= jumpSpeedTakeOff;
+				jumpSpeed = Math.min(jumpSpeedMax, jumpSpeed += jumpSpeedIncreaseRate);
+			}
+			else {
+				if (isJumping() && isReadyToJump()) {
+					jumpSpeed = Math.min(jumpSpeedMax, jumpSpeed += jumpSpeedIncreaseRate);
+					if (jumpSpeed == jumpSpeedMax) {
+						setReadyToJump(false);
+					}
+				}
+			}
+		}
+		else {
+			setJumping(false);
+			jumpSpeed = 0;
+		}
+		
+		velocityY-=jumpSpeed;
+		velocity.update(velocityX, velocityY);
+	}
+	
+	private void move() {
+
+		x = (int) (x + getVelocity().getVectorX());
+		y = (int) (y + getVelocity().getVectorY());
+		
+		movementHasBeenChecked = false;
+	}
+
+	public Velocity getVelocity() {
+		return velocity;
+	}
+
 	@Override
 	public void draw(Graphics2D g2d) {
 		g2d.drawImage(animation.getImage(), null, x, y);
 	}
 
-	private void move() {
-		
-		AnalogDirection convertMovementOfControlAction = movementHandler.convertMovementOfControlAction(controlActions);
-		
-		if(convertMovementOfControlAction != null)
-		{
-			currentViewDirection = convertMovementOfControlAction;
-			
-			moveSpeed = Math.min(moveSpeedMax, moveSpeed+moveSpeedIncreaseRate);
-		}
-		else 
-		{
-			moveSpeed = Math.max(0, moveSpeed-moveSpeedSlowDownRate);
-		}
-		
-		Diff diff = currentViewDirection.getDiff();
-		x = (int) (x + (diff.getVectorX()*moveSpeed));				
-		y = (int) (y + (diff.getVectorY()*moveSpeed));				
-	}
-	
 	@Override
 	public void handleCollision(Collision collision) {
 		super.handleCollision(collision);
-		
-		if(collision.getSideCollidedEntityHitsIn() == CollisionSide.BOT)
-		{
-			this.standsOnSolidGround = true;
+
+		if (collision.getSideCollidedEntityHitsIn() == CollisionSide.BOT) {
+			setStandsOnSolidGround(true);
 		}
-		
+
 	}
 
 	public double getMoveSpeedSlowDownRate() {
@@ -130,22 +198,10 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 	public void setStandsOnSolidGround(boolean standsOnSolidGround) {
 		this.standsOnSolidGround = standsOnSolidGround;
-	}
+		if (standsOnSolidGround) {
+			setReadyToJump(true);
+		}
 
-	public double getFallSpeedIncreaseRate() {
-		return fallSpeedIncreaseRate;
-	}
-
-	public void setFallSpeedIncreaseRate(double fallSpeedIncreaseRate) {
-		this.fallSpeedIncreaseRate = fallSpeedIncreaseRate;
-	}
-
-	public double getFallSpeedMax() {
-		return fallSpeedMax;
-	}
-
-	public void setFallSpeedMax(double fallSpeedMax) {
-		this.fallSpeedMax = fallSpeedMax;
 	}
 
 	public boolean isJumping() {
@@ -156,30 +212,12 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.isJumping = isJumping;
 	}
 
-
-	public double getFallSpeed() {
-		return fallSpeed;
-	}
-
-	public void setFallSpeed(double fallSpeed) {
-		this.fallSpeed = fallSpeed;
-	}
-
-
 	public AnalogDirection getCurrentMoveDirection() {
 		return currentMoveDirection;
 	}
 
 	public void setCurrentMoveDirection(AnalogDirection currentMoveDirection) {
 		this.currentMoveDirection = currentMoveDirection;
-	}
-
-	public AnalogMoveActionHandler getMovementHandler() {
-		return movementHandler;
-	}
-
-	public void setMovementHandler(AnalogMoveActionHandler movementHandler) {
-		this.movementHandler = movementHandler;
 	}
 
 	public AnalogDirection getCurrentViewDirection() {
@@ -213,6 +251,65 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	public void setMoveSpeedIncreaseRate(double moveSpeedIncreaseRate) {
 		this.moveSpeedIncreaseRate = moveSpeedIncreaseRate;
 	}
-	
-	
+
+	public GameInputHandler getGameInputHandler() {
+		return gameInputHandler;
+	}
+
+	public void setGameInputHandler(GameInputHandler gameInputHandler) {
+		this.gameInputHandler = gameInputHandler;
+	}
+
+	public double getJumpSpeed() {
+		return jumpSpeed;
+	}
+
+	public void setJumpSpeed(double jumpSpeed) {
+		this.jumpSpeed = jumpSpeed;
+	}
+
+	public double getJumpSpeedMax() {
+		return jumpSpeedMax;
+	}
+
+	public void setJumpSpeedMax(double jumpSpeedMax) {
+		this.jumpSpeedMax = jumpSpeedMax;
+	}
+
+	public double getJumpSpeedIncreaseRate() {
+		return jumpSpeedIncreaseRate;
+	}
+
+	public void setJumpSpeedIncreaseRate(double jumpSpeedIncreaseRate) {
+		this.jumpSpeedIncreaseRate = jumpSpeedIncreaseRate;
+	}
+
+	public double getJumpSpeedTakeOff() {
+		return jumpSpeedTakeOff;
+	}
+
+	public void setJumpSpeedTakeOff(double jumpSpeedTakeOff) {
+		this.jumpSpeedTakeOff = jumpSpeedTakeOff;
+	}
+
+	public boolean isReadyToJump() {
+		return isReadyToJump;
+	}
+
+	public void setReadyToJump(boolean isReadyToJump) {
+		this.isReadyToJump = isReadyToJump;
+	}
+
+	public boolean isMovementHasBeenChecked() {
+		return movementHasBeenChecked;
+	}
+
+	public void setMovementHasBeenChecked(boolean movementHasBeenChecked) {
+		this.movementHasBeenChecked = movementHasBeenChecked;
+	}
+
+	public void setVelocity(Velocity velocity) {
+		this.velocity = velocity;
+	}
+
 }

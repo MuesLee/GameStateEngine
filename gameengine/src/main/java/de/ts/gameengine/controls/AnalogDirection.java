@@ -1,6 +1,6 @@
 package de.ts.gameengine.controls;
 
-import de.ts.gameengine.entities.movement.Diff;
+import de.ts.gameengine.entities.movement.Velocity;
 
 public enum AnalogDirection {
 	UP(0, -1), UP_RIGHT(0.5, -0.5), RIGHT(1, 0), DOWN_RIGHT(0.5, 0.5), DOWN(0, 1), DOWN_LEFT(-0.5, 0.5), LEFT(-1,
@@ -14,8 +14,8 @@ public enum AnalogDirection {
 		this.diffX = diffX;
 	}
 
-	public Diff getDiff() {
-		Diff diff = new Diff(this.diffX, this.diffY);
+	public Velocity getDiff() {
+		Velocity diff = new Velocity(this.diffX, this.diffY);
 		return diff;
 	}
 
