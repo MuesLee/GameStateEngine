@@ -69,26 +69,26 @@ public abstract class StaticGameEntity {
 	
 	public Rectangle getTopLine()
 	{
-		Rectangle topLine = new Rectangle(x, y, width, 0);
+		Rectangle topLine = new Rectangle(x, y, width, 1);
 		
 		return topLine;
 	}
 	
 	public Rectangle getBotLine()
 	{
-		Rectangle botLine = new Rectangle(x, y+height, width, 0);
+		Rectangle botLine = new Rectangle(x, y+height, width, 1);
 		
 		return botLine;
 	}
 	public Rectangle getLeftLine()
 	{
-		Rectangle leftLine = new Rectangle(x, y, 0, height);
+		Rectangle leftLine = new Rectangle(x, y, 1, height);
 		
 		return leftLine;
 	}
 	public Rectangle getRightLine()
 	{
-		Rectangle rightLine = new Rectangle(x+width, y, 0, height);
+		Rectangle rightLine = new Rectangle(x+width, y, 1, height);
 		
 		return rightLine;
 	}
@@ -105,8 +105,13 @@ public abstract class StaticGameEntity {
 		return recThis.intersects(recOther);
 	}
 
+	/**
+	 * Creates a new rectangle with entities coordinates, width and height
+	 * 
+	 * @return
+	 */
 	public Rectangle getCollisionBox() {
-		return new Rectangle(x - width, y - height,
+		return new Rectangle(x, y,
 				width, height);
 	}
 

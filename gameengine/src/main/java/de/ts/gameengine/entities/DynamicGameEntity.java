@@ -14,20 +14,25 @@ import de.ts.gameengine.entities.movement.SpecialMoveActionHandler;
 
 public abstract class DynamicGameEntity extends StaticGameEntity {
 
-	protected boolean standsOnSolidGround;
-	protected boolean isJumping;
+	
 	protected AnalogDirection currentMoveDirection;
-
 	protected AnalogDirection currentViewDirection = AnalogDirection.RIGHT;
 
 	private AnalogControlAction controlActions;
 	private GameInputHandler gameInputHandler;
+	private boolean movementHasBeenChecked;
+
+	private boolean ignoresGravity;
+	private Velocity velocity;
+	protected boolean standsOnSolidGround;
 
 	protected double moveSpeed;
 	protected double moveSpeedMax;
 	protected double moveSpeedSlowDownRate;
 	protected double moveSpeedIncreaseRate;
 
+	protected boolean isJumping;
+	private boolean isReadyToJump;
 	protected double jumpSpeed;
 	protected double jumpSpeedMax;
 	protected double jumpSpeedIncreaseRate;
@@ -36,9 +41,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	protected Animation animation;
 	protected int currentAction;
 	protected int previousAction;
-	private boolean isReadyToJump;
-	private boolean movementHasBeenChecked;
-	private Velocity velocity;
 	
 
 	public DynamicGameEntity(GameInputHandler gameInputHandler) {
@@ -311,6 +313,14 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 	public void setVelocity(Velocity velocity) {
 		this.velocity = velocity;
+	}
+
+	public boolean isIgnoresGravity() {
+		return ignoresGravity;
+	}
+
+	public void setIgnoresGravity(boolean ignoresGravity) {
+		this.ignoresGravity = ignoresGravity;
 	}
 
 }
