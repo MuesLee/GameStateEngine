@@ -13,6 +13,7 @@ import de.ts.gameengine.view.TileMap;
 
 public class AbstractGameLevel extends AbstractGameState {
 
+	private int gravity = 5;
 	protected TileMap tileMap;
 	protected CollisionManager collisionManager;
 
@@ -67,7 +68,7 @@ public class AbstractGameLevel extends AbstractGameState {
 	}
 
 	private void applyGravity(DynamicGameEntity entity) {
-		entity.getVelocity().update(0, 5);
+		entity.getVelocity().update(0, getGravity());
 	}
 
 	private void updateEntities() {
@@ -120,5 +121,13 @@ public class AbstractGameLevel extends AbstractGameState {
 
 	public void setOtherDynamicEntities(ArrayList<DynamicGameEntity> otherDynamicEntities) {
 		this.otherDynamicEntities = otherDynamicEntities;
+	}
+
+	public int getGravity() {
+		return gravity;
+	}
+
+	public void setGravity(int gravity) {
+		this.gravity = gravity;
 	}
 }
