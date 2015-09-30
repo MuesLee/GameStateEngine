@@ -9,6 +9,8 @@ public class AnalogControlAction {
 	private AtomicBoolean up;
 	private AtomicBoolean down;
 	
+	
+	private AtomicBoolean start;
 	private AtomicBoolean jump;
 	
 	public AnalogControlAction() {
@@ -17,7 +19,7 @@ public class AnalogControlAction {
 	this.up = new AtomicBoolean();
 	this.down = new AtomicBoolean();
 	this.jump = new AtomicBoolean();
-	
+	this.start = new AtomicBoolean();
 	}
 	
 	public boolean isJump() {
@@ -27,7 +29,6 @@ public class AnalogControlAction {
 		this.jump.set(jump);
 	}
 
-	private AtomicBoolean start;
 	public boolean isLeft() {
 		return left.get();
 	}
