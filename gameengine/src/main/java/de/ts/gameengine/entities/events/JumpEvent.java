@@ -1,4 +1,4 @@
-package de.ts.gameengine.entities.actions;
+package de.ts.gameengine.entities.events;
 
 import de.ts.gameengine.entities.DynamicGameEntity;
 import de.ts.gameengine.entities.StaticGameEntity;

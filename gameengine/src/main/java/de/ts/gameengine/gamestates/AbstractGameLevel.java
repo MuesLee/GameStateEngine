@@ -58,13 +58,16 @@ public class AbstractGameLevel extends AbstractGameState {
 	public void update() {
 		
 		prepareEntitiesForUpdate();
-		
 		computeCollisions();
 		
 		background.update();
 		camera.update();
 		
 		updateEntities();
+	}
+
+	private void applyGravity(DynamicGameEntity entity) {
+		entity.getVelocity().update(0, 5);
 	}
 
 	private void updateEntities() {
@@ -79,9 +82,11 @@ public class AbstractGameLevel extends AbstractGameState {
 	private void prepareEntitiesForUpdate() {
 		for (Player player : getPlayers()) {
 			player.prepareUpdate();
+			applyGravity(player);
 		}
 		for (DynamicGameEntity entity : getOtherDynamicEntities()) {
 			entity.prepareUpdate();
+			applyGravity(entity);
 		}
 	}
 

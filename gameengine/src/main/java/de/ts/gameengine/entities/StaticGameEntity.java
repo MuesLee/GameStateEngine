@@ -9,8 +9,8 @@ import com.google.common.eventbus.Subscribe;
 
 import de.ts.gameengine.collision.Collision;
 import de.ts.gameengine.controller.GameController;
-import de.ts.gameengine.entities.actions.EntityEvent;
-import de.ts.gameengine.entities.actions.LongLastingModifier;
+import de.ts.gameengine.entities.events.EntityEvent;
+import de.ts.gameengine.entities.events.LongLastingModifier;
 
 
 public abstract class StaticGameEntity {
