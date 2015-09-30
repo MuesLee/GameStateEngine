@@ -117,6 +117,12 @@ public class CollisionManager {
 
 	}
 
+	/**
+	 * Creates and returns a new Rectangle which contains all points the given entity may touch on the upcoming move if unhindered
+	 * 
+	 * @param entity
+	 * @return
+	 */
 	Rectangle getVisitedAreaForEntity(DynamicGameEntity entity) {
 		Rectangle visitedArea = null;
 		
@@ -130,6 +136,12 @@ public class CollisionManager {
 		return visitedArea;
 	}
 
+	/**
+	 * Creates and returns a new rectangle which represents the collision box of the given entity extended by a constant amount in all directions.
+	 * 
+	 * @param entity
+	 * @return
+	 */
 	Rectangle getSearchRectangleForEntity(DynamicGameEntity entity) {
 		
 		
