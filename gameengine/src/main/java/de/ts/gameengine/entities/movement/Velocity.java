@@ -37,6 +37,11 @@ public class Velocity {
 		setVectorX(getVectorX() + diffX);
 		setVectorY(getVectorY() + diffY);
 	}
+
+	public void reset() {
+		this.vectorX = 0;
+		this.vectorY = 0;
+	}
 	
 	
 	

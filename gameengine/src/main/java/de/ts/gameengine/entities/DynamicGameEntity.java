@@ -47,7 +47,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		this.setMoveActions(new AnalogControlAction());
 		setAnimation(new Animation());
 		this.setVelocity(new Velocity(0,0));
-
 	}
 	
 	/**
@@ -129,6 +128,8 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 		x = (int) (x + getVelocity().getVectorX());
 		y = (int) (y + getVelocity().getVectorY());
+		
+		velocity.reset();
 		
 		movementHasBeenChecked = false;
 	}

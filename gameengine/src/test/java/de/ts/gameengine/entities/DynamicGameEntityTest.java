@@ -114,6 +114,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.prepareUpdate();
 		classUnderTest.update();
 		
+		classUnderTest.prepareUpdate();
 		classUnderTest.update();
 
 		int activeMovement = MOVE_SPEED_INCREASE_RATE + 2 * MOVE_SPEED_INCREASE_RATE;
