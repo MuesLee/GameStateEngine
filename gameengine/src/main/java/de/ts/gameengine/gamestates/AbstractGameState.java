@@ -19,7 +19,7 @@ public abstract class AbstractGameState {
 
 	public abstract void draw(Graphics2D g);
 
-	public abstract void update();
+	public abstract void update(double deltaU);
 
 	public abstract void init();
 

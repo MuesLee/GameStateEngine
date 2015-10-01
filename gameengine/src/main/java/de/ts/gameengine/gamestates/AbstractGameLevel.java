@@ -2,10 +2,9 @@ package de.ts.gameengine.gamestates;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.List;
 
-import de.ts.gameengine.collision.Collision;
-import de.ts.gameengine.collision.CollisionManager;
+import org.dyn4j.dynamics.World;
+
 import de.ts.gameengine.entities.DynamicGameEntity;
 import de.ts.gameengine.entities.Player;
 import de.ts.gameengine.view.Camera;
@@ -15,7 +14,7 @@ public class AbstractGameLevel extends AbstractGameState {
 
 	private int gravity = 5;
 	protected TileMap tileMap;
-	protected CollisionManager collisionManager;
+	private World world;
 
 	protected Camera camera;
 
@@ -23,8 +22,8 @@ public class AbstractGameLevel extends AbstractGameState {
 
 	public AbstractGameLevel() {
 		super();
-		this.collisionManager = new CollisionManager(this);
 		this.setOtherDynamicEntities(new ArrayList<DynamicGameEntity>());
+		this.setWorld(new World());
 	}
 
 	@Override
@@ -56,19 +55,15 @@ public class AbstractGameLevel extends AbstractGameState {
 	}
 
 	@Override
-	public void update() {
+	public void update(double deltaU) {
 		
 		prepareEntitiesForUpdate();
-		computeCollisions();
 		
+		world.update(deltaU);
 		background.update();
 		camera.update();
 		
 		updateEntities();
-	}
-
-	private void applyGravity(DynamicGameEntity entity) {
-		entity.getVelocity().update(0, getGravity());
 	}
 
 	private void updateEntities() {
@@ -83,22 +78,9 @@ public class AbstractGameLevel extends AbstractGameState {
 	private void prepareEntitiesForUpdate() {
 		for (Player player : getPlayers()) {
 			player.prepareUpdate();
-			applyGravity(player);
 		}
 		for (DynamicGameEntity entity : getOtherDynamicEntities()) {
 			entity.prepareUpdate();
-			applyGravity(entity);
-		}
-	}
-
-	private void computeCollisions() {
-		for (Player player : players) {
-			List<Collision> collisions = collisionManager.retrieveCollisions(player);
-		
-			for (Collision collision : collisions) {
-				
-				player.handleCollision(collision);
-			}
 		}
 	}
 
@@ -129,5 +111,13 @@ public class AbstractGameLevel extends AbstractGameState {
 
 	public void setGravity(int gravity) {
 		this.gravity = gravity;
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 }

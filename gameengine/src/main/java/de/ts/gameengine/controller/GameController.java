@@ -121,7 +121,7 @@ public class GameController implements Runnable {
 				initialTime = currentTime;
 
 				if (deltaU >= 1) {
-					update();
+					update(deltaU);
 					ticks++;
 					deltaU--;
 				}
@@ -145,8 +145,8 @@ public class GameController implements Runnable {
 		}
 	}
 
-	private void update() {
-		gameStateManager.update();
+	private void update(double deltaU) {
+		gameStateManager.update(deltaU);
 	}
 
 	public static long getNextIDForEntity ()

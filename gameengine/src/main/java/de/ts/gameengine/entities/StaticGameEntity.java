@@ -5,17 +5,18 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.dyn4j.dynamics.Body;
+
 import com.google.common.eventbus.Subscribe;
 
-import de.ts.gameengine.collision.Collision;
 import de.ts.gameengine.controller.GameController;
 import de.ts.gameengine.entities.events.EntityEvent;
 import de.ts.gameengine.entities.events.LongLastingModifier;
 
 
-public abstract class StaticGameEntity {
+public abstract class StaticGameEntity extends Body {
 
-	private long id;
+	private long objectId;
 
 	private int healthPoints;
 	private int maxHealthPoints;
@@ -36,7 +37,7 @@ public abstract class StaticGameEntity {
 	public StaticGameEntity() {
 		super();
 		this.activeEntityEvents = new ArrayBlockingQueue<>(2, true);
-		id = GameController.getNextIDForEntity();
+		setObjectId(GameController.getNextIDForEntity());
 		
 	}
 
@@ -91,11 +92,6 @@ public abstract class StaticGameEntity {
 		Rectangle rightLine = new Rectangle(x+width, y, 1, height);
 		
 		return rightLine;
-	}
-	
-	public void handleCollision(Collision collision)
-	{
-		
 	}
 	
 	public boolean intersects(StaticGameEntity entity) {
@@ -183,19 +179,11 @@ public abstract class StaticGameEntity {
 		this.height = height;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + (int) (getObjectId() ^ (getObjectId() >>> 32));
 		return result;
 	}
 
@@ -208,7 +196,7 @@ public abstract class StaticGameEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		StaticGameEntity other = (StaticGameEntity) obj;
-		if (id != other.id)
+		if (getObjectId() != other.getObjectId())
 			return false;
 		return true;
 	}
@@ -235,5 +223,13 @@ public abstract class StaticGameEntity {
 
 	public void setMaxHealthPoints(int maxHealthPoints) {
 		this.maxHealthPoints = maxHealthPoints;
+	}
+
+	public long getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(long objectId) {
+		this.objectId = objectId;
 	}
 }

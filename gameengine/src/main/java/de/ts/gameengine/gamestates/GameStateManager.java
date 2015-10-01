@@ -33,8 +33,8 @@ public class GameStateManager {
 		g.translate(0, 0);
 	}
 
-	public void update() {
-		getCurrentState().update();
+	public void update(double deltaU) {
+		getCurrentState().update(deltaU);
 	}
 
 	private AbstractGameState getCurrentState() {

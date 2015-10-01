@@ -38,7 +38,7 @@ public class DefaultMenuState extends AbstractGameState {
 	}
 
 	@Override
-	public void update() {
+	public void update(double deltaU) {
 		super.getBackground().update();
 		
 		if(playerOneMoveAction.isUp())

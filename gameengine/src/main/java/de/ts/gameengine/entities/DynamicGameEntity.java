@@ -2,15 +2,13 @@ package de.ts.gameengine.entities;
 
 import java.awt.Graphics2D;
 
-import de.ts.gameengine.collision.Collision;
-import de.ts.gameengine.collision.CollisionSide;
 import de.ts.gameengine.controls.AnalogControlAction;
 import de.ts.gameengine.controls.AnalogDirection;
 import de.ts.gameengine.entities.movement.AnalogMoveActionHandler;
-import de.ts.gameengine.entities.movement.Velocity;
 import de.ts.gameengine.entities.movement.GameInputHandler;
 import de.ts.gameengine.entities.movement.SpecialMoveAction;
 import de.ts.gameengine.entities.movement.SpecialMoveActionHandler;
+import de.ts.gameengine.entities.movement.Velocity;
 
 public abstract class DynamicGameEntity extends StaticGameEntity {
 
@@ -20,7 +18,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 	private AnalogControlAction controlActions;
 	private GameInputHandler gameInputHandler;
-	private boolean movementHasBeenChecked;
 
 	private boolean ignoresGravity;
 	private Velocity velocity;
@@ -87,8 +84,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	 */
 	@Override
 	public void update() {
-
-		move();
 		getAnimation().update();
 	}
 
@@ -125,16 +120,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 		velocityY-=jumpSpeed;
 		velocity.update(velocityX, velocityY);
 	}
-	
-	private void move() {
-
-		x = (int) (x + getVelocity().getVectorX());
-		y = (int) (y + getVelocity().getVectorY());
-		
-		velocity.reset();
-		
-		movementHasBeenChecked = false;
-	}
 
 	public Velocity getVelocity() {
 		return velocity;
@@ -143,16 +128,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	@Override
 	public void draw(Graphics2D g2d) {
 		g2d.drawImage(animation.getImage(), null, x, y);
-	}
-
-	@Override
-	public void handleCollision(Collision collision) {
-		super.handleCollision(collision);
-
-		if (collision.getSideCollidedEntityHitsIn() == CollisionSide.BOT) {
-			setStandsOnSolidGround(true);
-		}
-
 	}
 
 	public double getMoveSpeedSlowDownRate() {
@@ -301,14 +276,6 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 	public void setReadyToJump(boolean isReadyToJump) {
 		this.isReadyToJump = isReadyToJump;
-	}
-
-	public boolean isMovementHasBeenChecked() {
-		return movementHasBeenChecked;
-	}
-
-	public void setMovementHasBeenChecked(boolean movementHasBeenChecked) {
-		this.movementHasBeenChecked = movementHasBeenChecked;
 	}
 
 	public void setVelocity(Velocity velocity) {

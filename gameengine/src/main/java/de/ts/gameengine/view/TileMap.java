@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import org.dyn4j.geometry.MassType;
+
 import de.ts.gameengine.controller.GameController;
 import de.ts.gameengine.entities.Enviroment;
 import de.ts.gameengine.entities.StaticGameEntity;
@@ -40,6 +42,7 @@ public class TileMap {
 	private int numRowsToDraw;
 	private int numColsToDraw;
 	private static Pattern pattern = Pattern.compile(Pattern.quote("||"));
+	private List<StaticGameEntity> entities;
 	
 	public TileMap(int tileSize) {
 		this.setTileWidth(tileSize);
@@ -53,9 +56,9 @@ public class TileMap {
 		this.tileWidth = tileWidth;
 	}
 	
-	public List<StaticGameEntity> computeStaticGameEntitiesForTiles ()
+	private void computeStaticGameEntitiesForTiles ()
 	{
-		List<StaticGameEntity> entities = new ArrayList<>();
+		entities = new ArrayList<>();
 		
 		int tileNumber = 0;
 		for (int row = 0; row < numRows; row++) {
@@ -65,21 +68,15 @@ public class TileMap {
 				tileNumber = map[row][col];
 				if (tileNumber == 0)
 					continue;
-				int type = tiles[getRowForTileNumber(tileNumber)][getColumnForTileNumber(tileNumber)].getType();
-				
-				if(type == Tile.BLOCKED)
-				{
-					Enviroment env = new Enviroment();
-					env.setHeight(tileHeight);
-					env.setWidth(tileWidth);
-					env.setX(col * tileWidth);
-					env.setY(row * tileHeight);
-					entities.add(env);
-				}
+				Enviroment env = new Enviroment();
+				env.setHeight(tileHeight);
+				env.setWidth(tileWidth);
+				env.setX(col * tileWidth);
+				env.setY(row * tileHeight);
+				env.setMass(MassType.INFINITE);
+				entities.add(env);
 			}
 		}
-		
-		return entities;
 	}
 
 	public void loadTiles(String path) {
@@ -101,6 +98,8 @@ public class TileMap {
 			Tile blockedTile = new Tile(subimage, Tile.BLOCKED);
 			tiles[1][i] = blockedTile;
 		}
+		
+		computeStaticGameEntitiesForTiles();
 	}
 
 	public void loadMap(String path) {
