@@ -2,6 +2,7 @@ package de.ts.gameengine.collision;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.ts.gameengine.entities.DynamicGameEntity;
@@ -26,12 +27,25 @@ public class CollisionManager {
 		this.gameState = gameState;
 	}
 
+	/**
+	 * Creates a new Quadtree with the size of the camera viewport.
+	 * 
+	 * This quadtree is build to contain all moving objects on the screen
+	 */
 	public void initDynamicQuadtree() {
 		Camera camera = gameState.getCamera();
 
 		this.dynamicQuadtree = createNewQuadtree(camera.getViewRectangle());
 	}
 
+	/**
+	 * Creates a new Quadtree with the given bounds
+	 * 
+	 * This quadtree is build to contain all static, non-moving objects
+	 * 
+	 * @param bounds
+	 * @param entities
+	 */
 	public void initStaticQuadtree(Rectangle bounds, List<StaticGameEntity> entities) {
 		this.staticQuadtree = createNewQuadtree(bounds);
 
@@ -92,6 +106,10 @@ public class CollisionManager {
 
 		possibleCollisions = staticQuadtree.retrieve(possibleCollisions, entityMovementArea);
 
+		
+		orderPossibleCollisionsByDistance(possibleCollisions,entity);
+		
+		
 		Rectangle entityBotLine = entity.getBotLine();
 		Rectangle entityTopLine = entity.getTopLine();
 		Rectangle entityLeftLine = entity.getLeftLine();
@@ -114,7 +132,16 @@ public class CollisionManager {
 		}
 
 		return collidedEntities;
+	}
 
+	private void orderPossibleCollisionsByDistance(List<StaticGameEntity> possibleCollisions, DynamicGameEntity entity) {
+		for (StaticGameEntity staticGameEntity : possibleCollisions) {
+			Velocity otherLeftTop = new Velocity(staticGameEntity.getX(), staticGameEntity.getY());
+			Velocity otherRightTop = new Velocity(staticGameEntity.getX()+staticGameEntity.getWidth(), staticGameEntity.getY());
+			Velocity otherRightBot = new Velocity(staticGameEntity.getX()+staticGameEntity.getWidth(), staticGameEntity.getY()+staticGameEntity.getHeight());
+			Velocity otherLeftBot = new Velocity(staticGameEntity.getX(), staticGameEntity.getY()+staticGameEntity.getHeight());
+			
+		}
 	}
 
 	/**
@@ -142,9 +169,8 @@ public class CollisionManager {
 	 * @param entity
 	 * @return
 	 */
+
 	Rectangle getSearchRectangleForEntity(DynamicGameEntity entity) {
-		
-		
 		int x = entity.getX();
 		int y = entity.getY();
 		
@@ -155,4 +181,26 @@ public class CollisionManager {
 		
 		return searchArea;
 	}
+	
+	/**
+	 * Computes the actual distance between two Coordinates
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	double distanceBetweenTwoVectors(Velocity a, Velocity b)
+	{
+		double distance = 0;
+		
+		double xA = a.getVectorX();
+		double yA = a.getVectorY();
+		double xB = b.getVectorX();
+		double yB = b.getVectorY();
+		
+		distance = Math.sqrt(Math.pow(xA-xB, 2)+Math.pow(yA-yB, 2));
+		
+		return distance;
+	}
+
 }

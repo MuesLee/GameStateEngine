@@ -77,5 +77,14 @@ public class CollisionManagerTest {
 		assertEquals(expected, actual);
 		
 	}
+	
+	@Test
+	public void testDistanceBetweenTwoPoints() throws Exception {
+		Velocity a = new Velocity(9, 7);
+		Velocity b = new Velocity(3, 2);
+		double actual = classUnderTest.distanceBetweenTwoVectors(a, b);
+		double expected = 7.8102;
+		assertEquals(expected, actual,0.01);
+	}
 }
 
