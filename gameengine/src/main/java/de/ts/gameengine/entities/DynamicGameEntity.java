@@ -1,6 +1,9 @@
 package de.ts.gameengine.entities;
 
-import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Vector2;
 
 import de.ts.gameengine.controls.AnalogControlAction;
 import de.ts.gameengine.controls.AnalogDirection;
@@ -12,7 +15,6 @@ import de.ts.gameengine.entities.movement.Velocity;
 
 public abstract class DynamicGameEntity extends StaticGameEntity {
 
-	
 	protected AnalogDirection currentMoveDirection;
 	protected AnalogDirection currentViewDirection = AnalogDirection.RIGHT;
 
@@ -38,28 +40,33 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	protected Animation animation;
 	protected int currentAction;
 	protected int previousAction;
-	
 
 	public DynamicGameEntity(GameInputHandler gameInputHandler) {
 		super();
 		this.setGameInputHandler(gameInputHandler);
 		this.setMoveActions(new AnalogControlAction());
 		setAnimation(new Animation());
-		this.setVelocity(new Velocity(0,0));
+		this.setVelocity(new Velocity(0, 0));
+		setLinearVelocity(new Vector2(0.0, 0.0));
+		setAngularVelocity(0.0);
+		setMass(MassType.NORMAL);
 	}
-	
+
 	/**
 	 * Handle User Inputs and compute Velocity
 	 */
-	public void prepareUpdate()
-	{
+	public void prepareUpdate() {
 		prepareRegularMovement();
-		
+
 		prepareSpecialAction();
+
+		Vector2 force = new Vector2(velocity.getVectorX(), velocity.getVectorY());
+		applyForce(force);
+		this.velocity.reset();
 	}
 
 	private void prepareRegularMovement() {
-		
+
 		AnalogMoveActionHandler movementHandler = gameInputHandler.getAnalogMoveActionHandler();
 		AnalogDirection convertMovementOfControlAction = movementHandler.convertMovementOfControlAction(controlActions);
 
@@ -71,14 +78,12 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 			moveSpeed = Math.max(0, moveSpeed - moveSpeedSlowDownRate);
 		}
 
-		
 		Velocity diff = currentViewDirection.getDiff();
 		double velocityX = diff.getVectorX() * moveSpeed;
 		double velocityY = diff.getVectorY() * moveSpeed;
 		velocity.update(velocityX, velocityY);
 	}
-	
-	
+
 	/**
 	 * Update Animation and move according to velocity
 	 */
@@ -94,16 +99,14 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 
 		double velocityY = 0;
 		double velocityX = 0;
-		
-		
+
 		if (specialMoveAction == SpecialMoveAction.JUMP) {
 			if (standsOnSolidGround) {
 				setJumping(true);
 				setStandsOnSolidGround(false);
 				velocityY -= jumpSpeedTakeOff;
 				jumpSpeed = Math.min(jumpSpeedMax, jumpSpeed += jumpSpeedIncreaseRate);
-			}
-			else {
+			} else {
 				if (isJumping() && isReadyToJump()) {
 					jumpSpeed = Math.min(jumpSpeedMax, jumpSpeed += jumpSpeedIncreaseRate);
 					if (jumpSpeed == jumpSpeedMax) {
@@ -111,13 +114,12 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			setJumping(false);
 			jumpSpeed = 0;
 		}
-		
-		velocityY-=jumpSpeed;
+
+		velocityY -= jumpSpeed;
 		velocity.update(velocityX, velocityY);
 	}
 
@@ -126,8 +128,8 @@ public abstract class DynamicGameEntity extends StaticGameEntity {
 	}
 
 	@Override
-	public void draw(Graphics2D g2d) {
-		g2d.drawImage(animation.getImage(), null, x, y);
+	protected BufferedImage getdrawImage() {
+		return animation.getImage();
 	}
 
 	public double getMoveSpeedSlowDownRate() {

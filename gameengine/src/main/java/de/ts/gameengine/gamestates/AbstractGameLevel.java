@@ -3,6 +3,8 @@ package de.ts.gameengine.gamestates;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import org.dyn4j.dynamics.Step;
+import org.dyn4j.dynamics.StepListener;
 import org.dyn4j.dynamics.World;
 
 import de.ts.gameengine.entities.DynamicGameEntity;
@@ -10,11 +12,11 @@ import de.ts.gameengine.entities.Player;
 import de.ts.gameengine.view.Camera;
 import de.ts.gameengine.view.TileMap;
 
-public class AbstractGameLevel extends AbstractGameState {
+public class AbstractGameLevel extends AbstractGameState implements StepListener {
 
 	private int gravity = 5;
 	protected TileMap tileMap;
-	private World world;
+	protected World world;
 
 	protected Camera camera;
 
@@ -24,6 +26,8 @@ public class AbstractGameLevel extends AbstractGameState {
 		super();
 		this.setOtherDynamicEntities(new ArrayList<DynamicGameEntity>());
 		this.setWorld(new World());
+		world.setGravity(World.EARTH_GRAVITY);
+		world.addListener(this);
 	}
 
 	@Override
@@ -58,7 +62,7 @@ public class AbstractGameLevel extends AbstractGameState {
 	public void update(double deltaU) {
 		
 		prepareEntitiesForUpdate();
-		
+		world.setUpdateRequired(true);
 		world.update(deltaU);
 		background.update();
 		camera.update();
@@ -119,5 +123,29 @@ public class AbstractGameLevel extends AbstractGameState {
 
 	public void setWorld(World world) {
 		this.world = world;
+	}
+
+	@Override
+	public void begin(Step step, World world) {
+		System.out.println("UPDATE BEGUN");
+		
+	}
+
+	@Override
+	public void updatePerformed(Step step, World world) {
+		System.out.println("UPDATE PERFORMED");
+		
+	}
+
+	@Override
+	public void postSolve(Step step, World world) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void end(Step step, World world) {
+		// TODO Auto-generated method stub
+		
 	}
 }

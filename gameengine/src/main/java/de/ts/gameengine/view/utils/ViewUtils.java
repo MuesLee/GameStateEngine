@@ -5,6 +5,8 @@ import java.awt.Toolkit;
 
 public class ViewUtils {
 
+	public static final double NANO_TO_BASE = 1.0e9;
+	
 	
 	public static Dimension getScreenSize()
 	{

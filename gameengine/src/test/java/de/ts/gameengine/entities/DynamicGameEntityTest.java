@@ -57,7 +57,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.update();
 
 		int expected = MOVE_SPEED_INCREASE_RATE;
-		int actual = classUnderTest.getX();
+		int actual = (int) classUnderTest.getTransform().getTranslationX();
 
 		assertEquals(expected, actual);
 	}
@@ -69,7 +69,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.update();
 		
 		int expected = -MOVE_SPEED_INCREASE_RATE;
-		int actual = classUnderTest.getX();
+		int actual = (int) classUnderTest.getTransform().getTranslationX();
 		
 		assertEquals(expected, actual);
 	}
@@ -85,7 +85,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.update();
 
 		int expected = MOVE_SPEED_INCREASE_RATE + 2 * MOVE_SPEED_INCREASE_RATE;
-		int actual = classUnderTest.getX();
+		int actual = (int) classUnderTest.getTransform().getTranslationX();
 
 		assertEquals(expected, actual);
 	}
@@ -100,7 +100,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.update();
 		
 		int expected = -(MOVE_SPEED_INCREASE_RATE + 2 * MOVE_SPEED_INCREASE_RATE);
-		int actual = classUnderTest.getX();
+		int actual = (int) classUnderTest.getTransform().getTranslationX();
 		
 		assertEquals(expected, actual);
 	}
@@ -121,7 +121,7 @@ public class DynamicGameEntityTest {
 		int passiveMovement = 2 * MOVE_SPEED_INCREASE_RATE-MOVE_SPEED_SLOW_DOWN_RATE;
 		
 		int expected = activeMovement + passiveMovement;
-		int actual = classUnderTest.getX();
+		int actual = (int) classUnderTest.getTransform().getTranslationX();
 
 		assertEquals(expected, actual);
 	}
@@ -144,7 +144,7 @@ public class DynamicGameEntityTest {
 		int passiveMovement = 2 * MOVE_SPEED_INCREASE_RATE-MOVE_SPEED_SLOW_DOWN_RATE;
 		
 		int expected = -(activeMovement + passiveMovement);
-		int actual = classUnderTest.getX();
+		int actual = (int) classUnderTest.getTransform().getTranslationX();
 		
 		assertEquals(expected, actual);
 	}
@@ -155,12 +155,12 @@ public class DynamicGameEntityTest {
 		
 		moveActions.setJump(true);
 		classUnderTest.setStandsOnSolidGround(true);
-		classUnderTest.setY(baseY);
+		classUnderTest.translate(0,baseY);
 		
 		classUnderTest.prepareUpdate();
 		classUnderTest.update();
 		
-		int actual = classUnderTest.getY();
+		int actual = (int) classUnderTest.getTransform().getTranslationY();
 		
 		int expected = baseY-JUMP_SPEED_TAKE_OFF_SPEED-JUMP_SPEED_INCREASE;
 		
@@ -169,7 +169,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityJumps2Steps() throws Exception {
 		int baseY = 100;
-		classUnderTest.setY(baseY);
+		classUnderTest.translate(0,baseY);
 		classUnderTest.setStandsOnSolidGround(true);
 		
 		moveActions.setJump(true);
@@ -180,7 +180,7 @@ public class DynamicGameEntityTest {
 		classUnderTest.prepareUpdate();
 		classUnderTest.update();
 		
-		int actual = classUnderTest.getY();
+		int actual = (int) classUnderTest.getTransform().getTranslationY();
 		
 		int expected = baseY-JUMP_SPEED_TAKE_OFF_SPEED-JUMP_SPEED_INCREASE-(Math.min(JUMP_SPEED_MAX, 3*JUMP_SPEED_INCREASE));
 		
@@ -189,7 +189,7 @@ public class DynamicGameEntityTest {
 	@Test
 	public void testEntityJumps2StepWhileMovingRight2Steps() throws Exception {
 		int baseY = 100;
-		classUnderTest.setY(baseY);
+		classUnderTest.translate(0,baseY);
 		classUnderTest.setStandsOnSolidGround(true);
 		
 		moveActions.setJump(true);
@@ -202,8 +202,8 @@ public class DynamicGameEntityTest {
 		classUnderTest.prepareUpdate();
 		classUnderTest.update();
 		
-		int actualY = classUnderTest.getY();
-		int actualX = classUnderTest.getX();
+		int actualY = (int) classUnderTest.getTransform().getTranslationY();
+		int actualX = (int) classUnderTest.getTransform().getTranslationX();
 		
 		int expectedY = baseY-JUMP_SPEED_TAKE_OFF_SPEED-JUMP_SPEED_INCREASE-(Math.min(JUMP_SPEED_MAX, 3*JUMP_SPEED_INCREASE));
 		int expectedX = MOVE_SPEED_INCREASE_RATE + Math.min(MOVE_SPEED_INCREASE_RATE*2, MOVE_SPEED_MAX);

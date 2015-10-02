@@ -43,14 +43,13 @@ public class Player extends DynamicGameEntity {
 	@Override
 	public void update() {
 		super.update();
+		//System.out.println("X:" + getX() + "Y: " +getY());
 	}
 	
 	protected void setAnimation(int i) {
 		setCurrentAction(i);
 		animation.setFrames(sprites.get(getCurrentAction()));
 		animation.setFramesBetweenNextAnimation(SPRITETIMINGS[getCurrentAction()]);
-		width = FRAMEWIDTHS[getCurrentAction()];
-		height = FRAMEHEIGHTS[getCurrentAction()];
 	}
 
 	public GameController getGameController() {

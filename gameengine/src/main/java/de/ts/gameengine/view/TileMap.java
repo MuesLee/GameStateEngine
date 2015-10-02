@@ -1,7 +1,6 @@
 package de.ts.gameengine.view;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,11 +12,12 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Rectangle;
 
 import de.ts.gameengine.controller.GameController;
 import de.ts.gameengine.entities.Enviroment;
-import de.ts.gameengine.entities.StaticGameEntity;
 import de.ts.gameengine.entities.Tile;
 
 public class TileMap {
@@ -42,7 +42,7 @@ public class TileMap {
 	private int numRowsToDraw;
 	private int numColsToDraw;
 	private static Pattern pattern = Pattern.compile(Pattern.quote("||"));
-	private List<StaticGameEntity> entities;
+	private List<Enviroment> entities;
 	
 	public TileMap(int tileSize) {
 		this.setTileWidth(tileSize);
@@ -58,7 +58,7 @@ public class TileMap {
 	
 	private void computeStaticGameEntitiesForTiles ()
 	{
-		entities = new ArrayList<>();
+		setEntities(new ArrayList<Enviroment>());
 		
 		int tileNumber = 0;
 		for (int row = 0; row < numRows; row++) {
@@ -69,12 +69,13 @@ public class TileMap {
 				if (tileNumber == 0)
 					continue;
 				Enviroment env = new Enviroment();
-				env.setHeight(tileHeight);
-				env.setWidth(tileWidth);
-				env.setX(col * tileWidth);
-				env.setY(row * tileHeight);
+				
+				BodyFixture fixture = new BodyFixture(new Rectangle(tileWidth, tileHeight));
+				env.addFixture(fixture);
+				env.translate(col * tileWidth, row * tileHeight);
 				env.setMass(MassType.INFINITE);
-				entities.add(env);
+				env.setTile(tiles[getRowForTileNumber(tileNumber)] [getColumnForTileNumber(tileNumber)]);
+				getEntities().add(env);
 			}
 		}
 	}
@@ -132,26 +133,10 @@ public class TileMap {
 	}
 
 	public void draw(Graphics2D g2d) {
-		int tileNumber = 0;
-		for (int row = rowOffset; row < rowOffset + numRowsToDraw; row++) {
-			if (row >= numRows)
-				break;
-			for (int col = colOffset; col < colOffset + numColsToDraw; col++) {
-				if (col >= numCols)
-					break;
-				tileNumber = map[row][col];
-				if (tileNumber == 0)
-					continue;
-				tileNumber = map[row][col];
-				g2d.drawImage(getImageForTileNumber(tileNumber - 1), x + col
-						* getTileWidth(), y + row * getTileHeight(), null);
-			}
+		
+		for (Enviroment enviroment : entities) {
+			enviroment.draw(g2d);
 		}
-	}
-
-	private BufferedImage getImageForTileNumber(int tileNumber) {
-		return tiles[getRowForTileNumber(tileNumber)][getColumnForTileNumber(tileNumber)]
-				.getImage();
 	}
 
 	private void fixBounds() {
@@ -171,7 +156,7 @@ public class TileMap {
 	
 	public Rectangle getBounds()
 	{
-		return new Rectangle(0,0,width, height);
+		return new Rectangle(width, height);
 	}
 
 	public int getType(int row, int column) {
@@ -349,5 +334,13 @@ public class TileMap {
 
 	public void setTileHeight(int tileHeight) {
 		this.tileHeight = tileHeight;
+	}
+
+	public List<Enviroment> getEntities() {
+		return entities;
+	}
+
+	public void setEntities(List<Enviroment> entities) {
+		this.entities = entities;
 	}
 }

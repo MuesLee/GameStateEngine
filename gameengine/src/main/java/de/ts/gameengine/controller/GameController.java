@@ -25,6 +25,8 @@ public class GameController implements Runnable {
 
 	public static int WIDTH = 660;
 	public static int HEIGHT = 330;
+	
+	public static final double SCALE = 1;
 
 	private static int UPS = 30;
 	private static int FPS = 60;
@@ -64,7 +66,8 @@ public class GameController implements Runnable {
 		getFrame().setLayout(new BorderLayout());
 		getFrame().add(panel, BorderLayout.CENTER);
 		getFrame().pack();
-
+		getFrame().setLocationRelativeTo(null);
+		
 		configurePlayers();
 	}
 	
@@ -104,10 +107,10 @@ public class GameController implements Runnable {
 
 		startGameloop();
 		
-		long initialTime = System.nanoTime();
+		long lastUpdateTime = System.nanoTime();
 		final double timeU = 1000000000 / UPS;
 		final double timeF = 1000000000 / FPS;
-		double deltaU = 0, deltaF = 0;
+		double deltaUpdate = 0, deltaFrames = 0;
 		int frames = 0, ticks = 0;
 		long timer = System.currentTimeMillis();
 
@@ -116,20 +119,22 @@ public class GameController implements Runnable {
 			while (!paused.get()) {
 
 				long currentTime = System.nanoTime();
-				deltaU += (currentTime - initialTime) / timeU;
-				deltaF += (currentTime - initialTime) / timeF;
-				initialTime = currentTime;
+				long pastTime = currentTime - lastUpdateTime;
+				deltaUpdate += pastTime / timeU;
+				deltaFrames += pastTime / timeF;
+				lastUpdateTime = currentTime;
 
-				if (deltaU >= 1) {
-					update(deltaU);
+				if (deltaUpdate >= 1) {
+					double worldUpdateTime = pastTime/ViewUtils.NANO_TO_BASE;
+					update(worldUpdateTime);
 					ticks++;
-					deltaU--;
+					deltaUpdate--;
 				}
 
-				if (deltaF >= 1) {
+				if (deltaFrames >= 1) {
 					render();
 					frames++;
-					deltaF--;
+					deltaFrames--;
 				}
 
 				if (System.currentTimeMillis() - timer > 1000) {

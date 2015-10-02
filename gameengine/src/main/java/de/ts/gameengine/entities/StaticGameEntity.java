@@ -1,18 +1,21 @@
 package de.ts.gameengine.entities;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.geometry.Convex;
+import org.dyn4j.geometry.Polygon;
+import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.geometry.Vector2;
 
 import com.google.common.eventbus.Subscribe;
 
 import de.ts.gameengine.controller.GameController;
 import de.ts.gameengine.entities.events.EntityEvent;
 import de.ts.gameengine.entities.events.LongLastingModifier;
-
 
 public abstract class StaticGameEntity extends Body {
 
@@ -21,122 +24,85 @@ public abstract class StaticGameEntity extends Body {
 	private int healthPoints;
 	private int maxHealthPoints;
 	private int healthPointReg;
-	
-	protected int x;
-	protected int y;
-
-	protected int width;
-	protected int height;
 
 	protected String name;
-	
+
 	protected ArrayBlockingQueue<LongLastingModifier> activeEntityEvents;
-	
+
 	protected BufferedImage image;
-	
+
 	public StaticGameEntity() {
 		super();
 		this.activeEntityEvents = new ArrayBlockingQueue<>(2, true);
 		setObjectId(GameController.getNextIDForEntity());
-		
+
 	}
 
 	public void update() {
-		
+
 		for (LongLastingModifier event : activeEntityEvents) {
 			event.decreaseDuration();
 		}
 
-		healthPoints = Math.min(healthPoints+healthPointReg, maxHealthPoints);
+		healthPoints = Math.min(healthPoints + healthPointReg, maxHealthPoints);
 	}
-	
+
 	@Subscribe
-	public void handleEntityEvents(EntityEvent event)
-	{
-		//TODO: EVENT HANDLING
-		if(event instanceof LongLastingModifier)
-		{
+	public void handleEntityEvents(EntityEvent event) {
+		// TODO: EVENT HANDLING
+		if (event instanceof LongLastingModifier) {
 			activeEntityEvents.add((LongLastingModifier) event);
 		}
 	}
-	
 
 	public void draw(Graphics2D g2d) {
 
-		g2d.drawImage(image, null, x, y);
-
-	}
-	
-	
-	public Rectangle getTopLine()
-	{
-		Rectangle topLine = new Rectangle(x, y, width, 1);
+		int x = (int) transform.getTranslationX();
+		int y = (int) transform.getTranslationY();
 		
-		return topLine;
+		g2d.drawImage(getdrawImage(), x, y, null);
+		
 	}
 	
-	public Rectangle getBotLine()
+	protected double getX()
 	{
-		Rectangle botLine = new Rectangle(x, y+height, width, 1);
-		
-		return botLine;
-	}
-	public Rectangle getLeftLine()
-	{
-		Rectangle leftLine = new Rectangle(x, y, 1, height);
-		
-		return leftLine;
-	}
-	public Rectangle getRightLine()
-	{
-		Rectangle rightLine = new Rectangle(x+width, y, 1, height);
-		
-		return rightLine;
+		BodyFixture fixture = getFixture(0);
+		Convex convex = fixture.getShape();
+		if (convex instanceof Polygon) {
+			if (convex instanceof Rectangle) {
+				Rectangle r = (Rectangle) convex;
+				Vector2 c = r.getCenter();
+				return c.x;
+			}
+		}
+		return -1;
 	}
 	
-	public boolean intersects(StaticGameEntity entity) {
-		Rectangle recThis = getCollisionBox();
-		Rectangle recOther = entity.getCollisionBox();
-
-		return recThis.intersects(recOther);
-	}
-
-	/**
-	 * Creates a new rectangle with entities coordinates, width and height
-	 * 
-	 * @return
-	 */
-	public Rectangle getCollisionBox() {
-		return new Rectangle(x, y,
-				width, height);
-	}
-
-	public boolean intersects(Rectangle r) {
-		return getCollisionBox().intersects(r);
-	}
-
-	public boolean contains(StaticGameEntity o) {
-		Rectangle r1 = getCollisionBox();
-		Rectangle r2 = o.getCollisionBox();
-		return r1.contains(r2);
-	}
-
-	public boolean contains(Rectangle r) {
-		return getCollisionBox().contains(r);
+	protected double getY()
+	{
+		BodyFixture fixture = getFixture(0);
+		Convex convex = fixture.getShape();
+		if (convex instanceof Polygon) {
+			if (convex instanceof Rectangle) {
+				Rectangle r = (Rectangle) convex;
+				Vector2 c = r.getCenter();
+				return c.y;
+			}
+		}
+		return -1;
 	}
 	
-	protected void addEntityEventToQueue(LongLastingModifier event)
+	protected BufferedImage getdrawImage()
 	{
+		return image;
+	}
+
+	protected void addEntityEventToQueue(LongLastingModifier event) {
 		activeEntityEvents.add(event);
 	}
-	protected boolean removedEntityEventFromQueue(LongLastingModifier event)
-	{
-		return activeEntityEvents.remove(event);
-	}
 
-	public void setPosition(int x, int y) {
-		this.x = x;
-		this.y = y;
+	protected boolean removedEntityEventFromQueue(LongLastingModifier event) {
+		return activeEntityEvents.remove(event);
 	}
 
 	public String getName() {
@@ -145,38 +111,6 @@ public abstract class StaticGameEntity extends Body {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-	
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
 	}
 
 	@Override

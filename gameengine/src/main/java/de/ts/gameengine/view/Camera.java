@@ -1,7 +1,8 @@
 package de.ts.gameengine.view;
 
-import java.awt.Rectangle;
 import java.util.List;
+
+import org.dyn4j.geometry.Rectangle;
 
 import de.ts.gameengine.controller.GameController;
 import de.ts.gameengine.entities.Player;
@@ -35,7 +36,7 @@ public class Camera {
 
 		int xMax = 0;
 		for (Player player : players) {
-			xMax = Math.max(player.getX(), xMax);
+			xMax = (int) Math.max(player.getTransform().getTranslationX(), xMax);
 		}
 
 		this.x = Math.max(0, xMax - viewWidth / 2);
@@ -45,8 +46,10 @@ public class Camera {
 	
 	public Rectangle getViewRectangle()
 	{
-		return new Rectangle(getX(), getY(),
-				getViewWidth(), getViewHeight());
+		Rectangle rect = new Rectangle(getViewWidth(), getViewHeight());
+		rect.translate(x, y);
+		
+		return rect;
 	}
 
 	public int getX() {
